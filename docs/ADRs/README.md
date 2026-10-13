@@ -43,4 +43,4 @@ Every ADR file in this folder gets a row here — this table, plus `CLAUDE.md`'s
 | [ADR-005](ADR-005-plausible-analytics.md) | Plausible as the only analytics | Accepted |
 | [ADR-006](ADR-006-self-hosted-calcom-booking.md) | Self-hosted Cal.com for booking | Draft |
 | [ADR-007](ADR-007-test-and-lint-toolchain.md) | Vitest, ESLint, Prettier and Playwright as the test and lint toolchain | Accepted |
-| [ADR-008](ADR-008-client-portal-in-monorepo.md) | Build the client portal inside this repo, behind a clean boundary | Draft |
+| [ADR-008](ADR-008-client-portal-in-monorepo.md) | Build the client portal inside this repo, behind a clean boundary | Accepted |

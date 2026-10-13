@@ -1,6 +1,6 @@
 # ADR-008: Build the client portal inside this repo, behind a clean boundary
 
-**Status:** Draft
+**Status:** Accepted
 **Date:** 2026-10-13
 
 ## Context
@@ -35,4 +35,4 @@ Extract the portal into its own repo and deployment when any of these becomes tr
 - The boundary rules above are the cost: they need enforcing in review (or an ESLint import restriction once the portal exists).
 - Extraction later should be mostly a copy plus deleting the route group, if the rules were followed.
 - Resolves part of the CLAUDE.md open question on portal auth: default to Authentik. Revisit if that changes.
-- Status is Draft until the portal work starts; confirm or supersede it then.
+- Revisit when the portal work starts; supersede this ADR if the approach changes.
