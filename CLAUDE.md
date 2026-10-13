@@ -74,13 +74,13 @@ In production the `web` container and Postgres run from `compose.yaml`; the Clou
 - Next.js app skeleton: strict TypeScript, ESLint/Prettier, Vitest with one smoke test, a placeholder home page, a `leads` table schema.
 - Production `Dockerfile` and `compose.yaml` for Komodo. The image builds and serves HTTP 200 locally, and `docker compose config` validates.
 - CI (`ci.yml`) for lint, typecheck, test, build and image build; Dependabot for npm and Docker.
+- First migration for the `leads` table (`drizzle/0000_low_fenris.sql`), applied and checked against a throwaway Postgres 17.
 
 ### In progress
 
 ### Not started
 
 - First real pages: services, engagement models, portfolio and case studies, contact
-- First migration (`npm run db:generate` for the `leads` table)
 - Lead-capture server action: zod validation, Postgres insert, Resend notification
 - Plausible script wiring in the root layout
 - First Playwright test for the contact form
