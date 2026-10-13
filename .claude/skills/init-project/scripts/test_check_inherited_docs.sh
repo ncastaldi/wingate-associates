@@ -1,0 +1,210 @@
+#!/usr/bin/env bash
+# test_check_inherited_docs.sh
+#
+# Tests for check_inherited_docs.sh. Each case builds a throwaway fixture repo,
+# runs the sweep against it, and asserts on the tab-separated output.
+#
+# Usage:
+#   test_check_inherited_docs.sh
+#
+# Exit status: 0 all passed, 1 at least one failure.
+
+set -uo pipefail
+
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SUT="$HERE/check_inherited_docs.sh"
+
+pass=0
+fail=0
+
+# Indent captured output so a failure's detail reads as a block under its
+# heading. SC2001 suggests ${var//from/to}, which cannot anchor per line.
+# shellcheck disable=SC2001
+indent() { sed 's/^/    /' <<<"$1"; }
+
+fixture() {
+  local dir
+  dir="$(mktemp -d -t inherited-docs-test.XXXXXX)"
+  mkdir -p "$dir/.github/prompts"
+  printf '%s' "$dir"
+}
+
+# assert_hit <name> <fixture> <expected CHECK> <expected substring in output>
+assert_hit() {
+  local name="$1" dir="$2" check="$3" needle="$4" out
+  out="$("$SUT" "$dir" 2>&1)" || true
+  if grep -q "^$check	" <<<"$out" && grep -qF "$needle" <<<"$out"; then
+    pass=$((pass + 1))
+  else
+    fail=$((fail + 1))
+    echo "FAIL: $name"
+    echo "  expected a $check hit containing: $needle"
+    echo "  got:"
+    indent "$out"
+  fi
+  rm -rf "$dir"
+}
+
+# assert_no_hit <name> <fixture> <CHECK that must not appear>
+assert_no_hit() {
+  local name="$1" dir="$2" check="$3" out
+  out="$("$SUT" "$dir" 2>&1)" || true
+  if grep -q "^$check	" <<<"$out"; then
+    fail=$((fail + 1))
+    echo "FAIL: $name"
+    echo "  expected no $check hit, got:"
+    indent "$out"
+  else
+    pass=$((pass + 1))
+  fi
+  rm -rf "$dir"
+}
+
+# assert_exit <name> <fixture> <expected status>
+assert_exit() {
+  local name="$1" dir="$2" want="$3" got
+  "$SUT" "$dir" >/dev/null 2>&1
+  got=$?
+  if [[ "$got" == "$want" ]]; then
+    pass=$((pass + 1))
+  else
+    fail=$((fail + 1))
+    echo "FAIL: $name — expected exit $want, got $got"
+  fi
+  rm -rf "$dir"
+}
+
+# ---------------------------------------------------------------- exit status
+
+d="$(fixture)"; echo "# A project" > "$d/README.md"
+assert_exit "clean repo exits 0" "$d" 0
+
+d="$(fixture)"; echo "This is a project template." > "$d/README.md"
+assert_exit "dirty repo exits 1" "$d" 1
+
+d="$(mktemp -d)"
+assert_exit "repo with no markdown exits 2" "$d" 2
+
+# ----------------------------------------------------------- template language
+
+d="$(fixture)"; echo "Contributing to this template is easy." > "$d/CONTRIBUTING.md"
+assert_hit "detects 'this template'" "$d" TEMPLATE_LANGUAGE "CONTRIBUTING.md:1"
+
+d="$(fixture)"; echo "A stack-agnostic starting point." > "$d/README.md"
+assert_hit "detects 'stack-agnostic'" "$d" TEMPLATE_LANGUAGE "README.md:1"
+
+d="$(fixture)"; echo "# {PROJECT_NAME}" > "$d/README.md"
+assert_hit "detects unfilled {PROJECT_NAME}" "$d" TEMPLATE_LANGUAGE "README.md:1"
+
+d="$(fixture)"; echo "Scaffolded from this template. <!-- inherited-docs-ok -->" > "$d/README.md"
+assert_no_hit "inherited-docs-ok suppresses template language" "$d" TEMPLATE_LANGUAGE
+
+d="$(fixture)"; mkdir -p "$d/.claude/skills/demo"
+echo "This template ships skills." > "$d/.claude/skills/demo/SKILL.md"
+echo "# A project" > "$d/README.md"
+assert_no_hit "skips files under .claude/skills" "$d" TEMPLATE_LANGUAGE
+
+# Installed dependencies ship their own READMEs, with their own relative links
+# and wording. They are not this repo's documentation.
+node_modules_fixture() {
+  local d
+  d="$(fixture)"; mkdir -p "$d/node_modules/some-pkg" "$d/packages/app/node_modules/other-pkg"
+  echo "Use this template to start. See [changes](CHANGELOG.md)." > "$d/node_modules/some-pkg/README.md"
+  echo "A stack-agnostic lib. See [docs](docs/api.md)." > "$d/packages/app/node_modules/other-pkg/README.md"
+  echo "# A project" > "$d/README.md"
+  printf '%s' "$d"
+}
+assert_no_hit "skips template language inside node_modules" "$(node_modules_fixture)" TEMPLATE_LANGUAGE
+assert_no_hit "skips broken links inside node_modules" "$(node_modules_fixture)" BROKEN_LINK
+
+# Virtualenvs and vendored skills hold other people's files, the way node_modules
+# does. A virtualenv is one with a pyvenv.cfg at its root, whatever it is named.
+# Each case builds one kind alone, so a failure names the folder it broke on.
+skipped_fixture() {
+  local d
+  d="$(fixture)"
+  case "$1" in
+    venv)   mkdir -p "$d/.venv/lib/pillow"; echo "See [notes](docs/notes.md)." > "$d/.venv/lib/pillow/libjpeg_turbo.md" ;;
+    named)  mkdir -p "$d/env/lib/pkg"; printf 'home = /usr/bin\n' > "$d/env/pyvenv.cfg"
+            echo "Use this template. See [docs](docs/api.md)." > "$d/env/lib/pkg/README.md" ;;
+    agents) mkdir -p "$d/.agents/skills/langfuse/references"
+            echo "See [refs](references/missing.md)." > "$d/.agents/skills/langfuse/references/instrumentation.md" ;;
+  esac
+  echo "# A project" > "$d/README.md"
+  printf '%s' "$d"
+}
+assert_no_hit "skips broken links inside .venv" "$(skipped_fixture venv)" BROKEN_LINK
+assert_no_hit "skips broken links inside a virtualenv named otherwise" "$(skipped_fixture named)" BROKEN_LINK
+assert_no_hit "skips template language inside a virtualenv named otherwise" "$(skipped_fixture named)" TEMPLATE_LANGUAGE
+assert_no_hit "skips broken links inside vendored .agents/skills" "$(skipped_fixture agents)" BROKEN_LINK
+
+# The guards against over-pruning. A folder named like a virtualenv is not one
+# without a pyvenv.cfg, and only .agents/skills/ is vendored; the rest of .agents/
+# is still this repo's, and is still swept.
+d="$(fixture)"; mkdir -p "$d/venv/lib"
+echo "See [notes](docs/notes.md)." > "$d/venv/lib/README.md"
+echo "# A project" > "$d/README.md"
+assert_hit "still sweeps a folder named venv that has no pyvenv.cfg" "$d" BROKEN_LINK "venv/lib/README.md:1"
+
+d="$(fixture)"; mkdir -p "$d/.agents/notes"
+echo "See [notes](docs/notes.md)." > "$d/.agents/notes/guide.md"
+echo "# A project" > "$d/README.md"
+assert_hit "still sweeps the rest of .agents beside skills" "$d" BROKEN_LINK ".agents/notes/guide.md:1"
+
+# The template's own session snapshots and reviews live in docs/template/, which
+# init-project deletes. They are meant to talk about the template, so the sweep
+# skips them the way it skips a skill. A copy that leaks into a project is still
+# caught: check_scaffolded_project.sh flags the folder's existence.
+template_records_fixture() {
+  local d
+  d="$(fixture)"; mkdir -p "$d/docs/template"
+  echo "This template needs a review. See [plan](missing-plan.md)." > "$d/docs/template/review.md"
+  echo "# A project" > "$d/README.md"
+  printf '%s' "$d"
+}
+assert_no_hit "skips template language inside docs/template" "$(template_records_fixture)" TEMPLATE_LANGUAGE
+assert_no_hit "skips broken links inside docs/template" "$(template_records_fixture)" BROKEN_LINK
+
+# The guard against pruning too much: the rest of docs/ is still swept.
+d="$(fixture)"; mkdir -p "$d/docs/template" "$d/docs/specs"
+echo "This template needs a review." > "$d/docs/template/review.md"
+echo "Specs for this template." > "$d/docs/specs/overview.md"
+echo "# A project" > "$d/README.md"
+assert_hit "still sweeps the rest of docs/ beside docs/template" "$d" TEMPLATE_LANGUAGE "docs/specs/overview.md:1"
+
+# ----------------------------------------------------------------- broken links
+
+d="$(fixture)"; echo "See [the guide](docs/nope.md)." > "$d/README.md"
+assert_hit "detects a link to a missing path" "$d" BROKEN_LINK "docs/nope.md"
+
+d="$(fixture)"; mkdir -p "$d/docs"; echo "x" > "$d/docs/real.md"
+echo "See [the guide](docs/real.md)." > "$d/README.md"
+assert_no_hit "accepts a link to an existing path" "$d" BROKEN_LINK
+
+d="$(fixture)"; echo "See [docs](https://example.com/nope.md)." > "$d/README.md"
+assert_no_hit "ignores external links" "$d" BROKEN_LINK
+
+d="$(fixture)"; mkdir -p "$d/docs"; echo "x" > "$d/docs/real.md"
+echo "See [the guide](docs/real.md#a-heading)." > "$d/README.md"
+assert_no_hit "strips #anchor before resolving" "$d" BROKEN_LINK
+
+d="$(fixture)"; echo "Format: [ADR-NNN: Title](docs/ADRs/ADR-NNN-x.md) <!-- inherited-docs-ok -->" > "$d/README.md"
+assert_no_hit "inherited-docs-ok suppresses a broken link" "$d" BROKEN_LINK
+
+# --------------------------------------------------------------- missing prompts
+
+d="$(fixture)"; echo "Run gone.prompt.md for that." > "$d/README.md"
+assert_hit "detects a reference to a removed prompt" "$d" MISSING_PROMPT "gone.prompt.md"
+
+d="$(fixture)"; echo "x" > "$d/.github/prompts/here.prompt.md"
+echo "Run here.prompt.md for that." > "$d/README.md"
+assert_no_hit "accepts a reference to an existing prompt" "$d" MISSING_PROMPT
+
+d="$(fixture)"; echo "Was gone.prompt.md <!-- inherited-docs-ok -->" > "$d/README.md"
+assert_no_hit "inherited-docs-ok suppresses a missing prompt" "$d" MISSING_PROMPT
+
+# ---------------------------------------------------------------------- summary
+
+echo "---"
+echo "passed=$pass failed=$fail"
+(( fail == 0 ))
