@@ -1,7 +1,12 @@
-import { drizzle } from "drizzle-orm/node-postgres";
+import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
+import { getEnv } from "@/lib/env";
 import * as schema from "./schema";
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+let client: NodePgDatabase<typeof schema> | undefined;
 
-export const db = drizzle(pool, { schema });
+// Created on first use so importing this module needs no DATABASE_URL (builds, tests).
+export function getDb(): NodePgDatabase<typeof schema> {
+  client ??= drizzle(new Pool({ connectionString: getEnv().DATABASE_URL }), { schema });
+  return client;
+}

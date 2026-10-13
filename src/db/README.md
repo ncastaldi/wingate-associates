@@ -5,7 +5,7 @@ Drizzle ORM schema and database client for PostgreSQL.
 ## What belongs here
 
 - `schema.ts`: table definitions (starts with `leads`)
-- `index.ts`: the connection pool and `db` client
+- `index.ts`: the lazily created connection pool and `getDb()` client
 - Query helpers that wrap a table (for example `insertLead`)
 
 ## What does not belong here
