@@ -1,0 +1,17 @@
+.next
+node_modules
+drizzle
+package-lock.json
+coverage
+playwright-report
+test-results
+.claude
+# Prettier is for application code. Docs, workflows, scripts and issue forms
+# keep their own hand-written formatting.
+*.md
+*.yml
+*.yaml
+.github
+docs
+scripts
+LICENSE

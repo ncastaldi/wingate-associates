@@ -49,3 +49,14 @@ __pycache__/
 # — /init-project appends the right block(s) once the stack is chosen.
 # Project-specific entries go below that.
 # -------------------------------------------------------
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+coverage/
+playwright-report/
+test-results/
+npm-debug.log*

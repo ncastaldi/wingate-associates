@@ -20,8 +20,9 @@
 
 ## Checklist
 
-- [ ] Tests pass (see this repo's `TEST_COMMAND` in CLAUDE.md's `## Session Config`)
-- [ ] Lint passes (see this repo's `LINT_COMMAND`)
+- [ ] Tests pass (`npm test`)
+- [ ] Lint passes (`npm run lint`)
+- [ ] Typecheck and build pass (`npm run typecheck && npm run build`)
 - [ ] No secrets committed
 - [ ] CLAUDE.md updated if architecture or constraints changed
 - [ ] Relevant docs updated (ADR, spec, SOP) if applicable
