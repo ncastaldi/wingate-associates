@@ -13,6 +13,7 @@ Notes for deploying the site. The deployable artefacts themselves (`Dockerfile`,
 - Create the shared network: `docker network create edge`
 - Point the Cloudflare Tunnel's public hostname at `http://web:3000`
 - Set the variables listed in `.env.example` as Komodo variables
+- `NEXT_PUBLIC_PLAUSIBLE_SRC` is inlined at build time, so it must be available when the stack builds the image (compose passes it as a build arg). Changing it needs a rebuild, not just a restart.
 
 ## What does not belong here
 

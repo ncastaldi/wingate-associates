@@ -7,15 +7,16 @@
 services:
   web:
     image: ${WEB_IMAGE:-wingate-associates:latest}
-    build: .
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_PLAUSIBLE_SRC: ${NEXT_PUBLIC_PLAUSIBLE_SRC:-}
     restart: unless-stopped
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
       RESEND_API_KEY: ${RESEND_API_KEY}
       CONTACT_TO_EMAIL: ${CONTACT_TO_EMAIL}
       CONTACT_FROM_EMAIL: ${CONTACT_FROM_EMAIL}
-      NEXT_PUBLIC_PLAUSIBLE_DOMAIN: ${NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
-      NEXT_PUBLIC_PLAUSIBLE_SRC: ${NEXT_PUBLIC_PLAUSIBLE_SRC}
     depends_on:
       db:
         condition: service_healthy
