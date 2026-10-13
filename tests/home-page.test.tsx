@@ -9,4 +9,9 @@ describe("HomePage", () => {
       screen.getByRole("heading", { level: 1, name: "Wingate Associates" }),
     ).toBeInTheDocument();
   });
+
+  it("links to the contact page", () => {
+    render(<HomePage />);
+    expect(screen.getByRole("link", { name: "Get in touch" })).toHaveAttribute("href", "/contact");
+  });
 });
