@@ -34,6 +34,19 @@ describe("submitLead", () => {
     expect(sendLeadNotification).toHaveBeenCalledWith(stored);
   });
 
+  it("pretends to succeed but stores and sends nothing when the honeypot is filled", async () => {
+    await expect(submitLead(form({ ...valid, website: "http://spam.example" }))).resolves.toEqual({
+      ok: true,
+    });
+    expect(insert).not.toHaveBeenCalled();
+    expect(sendLeadNotification).not.toHaveBeenCalled();
+  });
+
+  it("accepts an empty honeypot as a normal submission", async () => {
+    await expect(submitLead(form({ ...valid, website: "" }))).resolves.toEqual({ ok: true });
+    expect(values).toHaveBeenCalledWith(stored);
+  });
+
   it("returns field errors and does nothing else when input is invalid", async () => {
     const result = await submitLead(form({ ...valid, email: "nope" }));
     expect(result).toMatchObject({ ok: false, fieldErrors: { email: [expect.any(String)] } });

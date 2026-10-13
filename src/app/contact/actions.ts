@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { getDb } from "@/db";
 import { leads } from "@/db/schema";
-import { leadSchema } from "@/lib/lead-schema";
+import { HONEYPOT_FIELD, leadSchema } from "@/lib/lead-schema";
 import { sendLeadNotification } from "@/lib/notify-lead";
 
 export type SubmitLeadResult =
@@ -11,6 +11,9 @@ export type SubmitLeadResult =
   | { ok: false; fieldErrors?: Record<string, string[] | undefined>; formError?: string };
 
 export async function submitLead(formData: FormData): Promise<SubmitLeadResult> {
+  // Report success without storing or emailing, so a bot learns nothing from the response.
+  if (formData.get(HONEYPOT_FIELD)) return { ok: true };
+
   const parsed = leadSchema.safeParse({
     name: formData.get("name"),
     email: formData.get("email"),
