@@ -104,6 +104,7 @@ In production the `web` container and Postgres run from `compose.yaml`; the Clou
 - [ADR-005: Plausible as the only analytics](docs/ADRs/ADR-005-plausible-analytics.md) — env-configured script, no other trackers
 - [ADR-006: Self-hosted Cal.com for booking](docs/ADRs/ADR-006-self-hosted-calcom-booking.md) — planned, added to compose when booking is built
 - [ADR-007: Vitest, ESLint, Prettier and Playwright as the test and lint toolchain](docs/ADRs/ADR-007-test-and-lint-toolchain.md) — CI runs lint, typecheck, test and build
+- [ADR-008: Build the client portal inside this repo, behind a clean boundary](docs/ADRs/ADR-008-client-portal-in-monorepo.md) — route-group separation now, extract on defined triggers
 
 ---
 
