@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { PlausibleScript } from "@/components/plausible-script";
 
 export const metadata: Metadata = {
   title: "Wingate Associates",
@@ -9,7 +10,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {children}
+        <PlausibleScript />
+      </body>
     </html>
   );
 }

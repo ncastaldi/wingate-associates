@@ -9,6 +9,9 @@ FROM node:24-alpine AS build
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+# NEXT_PUBLIC_* values are inlined at build time, so they must be build args.
+ARG NEXT_PUBLIC_PLAUSIBLE_SRC
+ENV NEXT_PUBLIC_PLAUSIBLE_SRC=$NEXT_PUBLIC_PLAUSIBLE_SRC
 RUN npm run build
 
 FROM node:24-alpine AS run

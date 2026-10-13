@@ -76,13 +76,13 @@ In production the `web` container and Postgres run from `compose.yaml`; the Clou
 - CI (`ci.yml`) for lint, typecheck, test, build and image build; Dependabot for npm and Docker.
 - First migration for the `leads` table (`drizzle/0000_low_fenris.sql`), applied and checked against a throwaway Postgres 17.
 - Lead-capture server action (`src/app/contact/actions.ts`): zod validation, Postgres insert, Resend notification. Env is validated lazily in `src/lib/env.ts`. The insert path was checked against a throwaway Postgres 17; the live Resend call has not been exercised yet. Spam protection and the contact form UI are not built.
+- Plausible script wiring (`src/components/plausible-script.tsx`, rendered in the root layout). It reads only `NEXT_PUBLIC_PLAUSIBLE_SRC` and renders nothing when unset. ADR-005 is amended to drop `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`.
 
 ### In progress
 
 ### Not started
 
 - First real pages: services, engagement models, portfolio and case studies, contact
-- Plausible script wiring in the root layout
 - First Playwright test for the contact form
 - Self-hosted Cal.com in the compose stack (ADR-006)
 - First deploy through Komodo and the Cloudflare Tunnel (`deploy/README.md`)
@@ -108,4 +108,4 @@ In production the `web` container and Postgres run from `compose.yaml`; the Clou
 
 ---
 
-*Last updated: 2026-10-12 | Session: init-project scaffold*
+*Last updated: 2026-10-13 | Session: Plausible script wiring*
