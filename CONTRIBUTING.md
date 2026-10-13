@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest in contributing to this template. This document covers the expected workflow.
+This document covers the workflow for changing the Wingate Associates site.
 
 ## Workflow
 
@@ -26,17 +26,27 @@ Branch names are snake_case. Keep them short and descriptive.
 Work atomically — one logical change per commit. Run `/commit-msg` or follow Conventional Commits format directly:
 
 ```
-feat(scope): add sync-template prompt
-fix(ci): correct ruff check command
+feat(contact): add lead-capture server action
+fix(ci): correct node version file path
 docs(readme): update quick start steps
-refactor(db): simplify migrations readme
+refactor(db): simplify lead insert helper
 ```
 
 Conventional Commits format is **expected**, not optional.
 
 ### 3. Open a PR
 
-CI must be green. The template ships no app code, but it does ship the scripts its skills depend on, and [`.github/workflows/skills-ci.yml`](.github/workflows/skills-ci.yml) lints and tests them. Run the same checks locally before pushing:
+CI must be green. [`.github/workflows/ci.yml`](.github/workflows/ci.yml) lints, typechecks, tests and builds the app, and checks that the Docker image builds. Run the same checks locally before pushing:
+
+```bash
+npm ci
+npm run lint        # ESLint + Prettier check
+npm run typecheck   # tsc --noEmit
+npm test            # Vitest
+npm run build       # Next.js production build
+```
+
+The project also keeps the Claude Code skills under `.claude/skills/`, and [`.github/workflows/skills-ci.yml`](.github/workflows/skills-ci.yml) lints and tests the scripts they depend on. If your change touches `.claude/` or `scripts/`, run those checks too:
 
 ```bash
 python3 -m pip install -r requirements-dev.txt   # pinned — same versions CI uses
@@ -54,16 +64,9 @@ ruff check .claude/skills
 python3 -m pytest .claude/skills -q
 ```
 
-If you changed anything a scaffolded project inherits — a doc, a workflow, a prompt Config block — run the scaffold smoke test too. It is the only check that exercises scaffolding end to end, and it catches template-only content leaking into files that travel downstream:
-
-```bash
-bash scripts/simulate_init.sh python-cli /tmp/scaffold-check
-bash scripts/check_scaffolded_project.sh /tmp/scaffold-check
-```
-
 Install from `requirements-dev.txt` rather than a bare `pip install ruff`. The pins there are what CI enforces, and a newer ruff enables rules CI does not — that difference is a green local run and a red PR.
 
-No other minimum bar — this is a solo-maintained template repo. Fill in the PR template.
+Fill in the PR template.
 
 ### 4. Merge
 
@@ -71,24 +74,17 @@ Squash or merge commit, your call.
 
 ---
 
-## Keeping the template in sync
+## Keeping the docs in sync
 
 When you change the folder structure, add a command or skill, or update a tooling default — run `/sync-template` to check for drift between the structure and its documentation. Your future self will thank you.
 
 ## What's in scope
 
-- Improvements to the folder structure or READMEs
-- New or improved commands in `.claude/commands/` and skills in `.claude/skills/` — see [`.claude/README.md`](.claude/README.md) for which of the two a workflow belongs in, and what earns a slot at all
-- CI, dependabot, or tooling updates
-- Bug fixes in any template file
+- The site: pages, components, the lead-capture pipeline, the database schema and migrations
+- Tests, CI, Dockerfile and compose changes, and dependency updates
+- New or improved commands in `.claude/commands/` and skills in `.claude/skills/` — see [`.claude/README.md`](.claude/README.md) for which of the two a workflow belongs in
 
 ## What's out of scope
 
-- Application code or a hardcoded stack (this is a stack-agnostic template — stack choice happens per-project via the `init-project` skill, not in the template itself)
-- Skills tied to one person's infrastructure or non-engineering workflows — every cloned project inherits `.claude/skills/`, so a homelab or personal skill becomes dead weight in repos that have nothing to do with it
-
-## Where the template's own records go
-
-Records about the template go in [`docs/template/`](docs/template/): the session snapshots `/session-end` writes while you work on it, and any review or plan about how it should change. Never put them in `docs/session-history/` or `docs/plans/`. This repo's `SNAPSHOT_PATH` already points at `docs/template/`, so `/session-end` writes there without being told.
-
-The split matters because `init-project` deletes `docs/template/` when it scaffolds a project and removes nothing else under `docs/`. A snapshot or review left anywhere else travels into every project built from the template. `scripts/check_scaffolded_project.sh` fails a scaffold that still has the folder, and the scaffold smoke test above runs it.
+- Hosted third-party services other than Resend, and additional analytics or trackers. This project self-hosts by default; see [`CLAUDE.md`](CLAUDE.md) for the constraints.
+- Secrets, `.env` files or real lead data in the repo

@@ -36,4 +36,10 @@ Every ADR file in this folder gets a row here — this table, plus `CLAUDE.md`'s
 
 | ADR | Title | Status |
 |-----|-------|--------|
-| _none yet_ | — | — |
+| [ADR-001](ADR-001-nextjs-typescript-full-stack.md) | Next.js (App Router) with TypeScript as the full-stack framework | Accepted |
+| [ADR-002](ADR-002-postgres-drizzle.md) | PostgreSQL with Drizzle ORM | Accepted |
+| [ADR-003](ADR-003-self-host-by-default.md) | Self-host by default, with Resend as the only hosted service | Accepted |
+| [ADR-004](ADR-004-docker-komodo-cloudflare-tunnel.md) | Docker deployment via Komodo, exposed only through a Cloudflare Tunnel | Accepted |
+| [ADR-005](ADR-005-plausible-analytics.md) | Plausible as the only analytics | Accepted |
+| [ADR-006](ADR-006-self-hosted-calcom-booking.md) | Self-hosted Cal.com for booking | Draft |
+| [ADR-007](ADR-007-test-and-lint-toolchain.md) | Vitest, ESLint, Prettier and Playwright as the test and lint toolchain | Accepted |
