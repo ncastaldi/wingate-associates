@@ -65,6 +65,7 @@ In production the `web` container and Postgres run from `compose.yaml`; the Clou
 - Server components by default; add `"use client"` only where interactivity needs it.
 - Validate every external input with zod before it reaches the database or Resend.
 - Conventional Commits are expected (`feat(scope): ...`, `fix(scope): ...`).
+- Next.js: this version differs from most training data. Follow @AGENTS.md and read `node_modules/next/dist/docs/` before writing Next.js code.
 
 ## Current state
 
