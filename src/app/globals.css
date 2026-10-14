@@ -1,17 +1,17 @@
 /*
  * Restrained default styling: system fonts (nothing fetched from a third
- * party), one accent colour taken from the icon, light and dark schemes,
+ * party), navy and teal taken from the logo (brand/wingate-logo.png), light and dark schemes,
  * and a single readable column. Styles target elements and ARIA roles, so
  * the markup stays plain.
  */
 
 :root {
-  --accent: #1f2a44;
+  --accent: #0f243f;
   --accent-contrast: #ffffff;
-  --link: #2c4a8a;
-  --text: #1a1d23;
+  --link: #24666e;
+  --text: #0f243f;
   --muted: #5b6270;
-  --bg: #fbfbf9;
+  --bg: #f6f6f2;
   --surface: #ffffff;
   --border: #dcdfe4;
   --notice-bg: #fff6dc;
@@ -30,12 +30,12 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --accent: #c9d4f2;
+    --accent: #7cc3c7;
     --accent-contrast: #12161f;
-    --link: #a9bdf0;
+    --link: #7cc3c7;
     --text: #e6e8ec;
     --muted: #a1a7b3;
-    --bg: #12161f;
+    --bg: #10161f;
     --surface: #1a1f2b;
     --border: #2e3545;
     --notice-bg: #2e2714;
@@ -95,12 +95,21 @@ body > header {
 }
 
 body > header > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
   font-family: var(--font-serif);
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--text);
   text-decoration: none;
   letter-spacing: 0.01em;
+}
+
+body > header > a img {
+  display: block;
+  width: 2.25rem;
+  height: 2.25rem;
 }
 
 body > header nav ul {
