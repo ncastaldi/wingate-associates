@@ -82,10 +82,6 @@ export default function ServicesPage() {
             </p>
           </li>
         </ul>
-        <p role="note">
-          I’m based in Atlanta. I work on-site around the metro and remotely anywhere, and I’ll
-          travel for the right project.
-        </p>
       </section>
 
       <section aria-labelledby="about-heading">
@@ -97,6 +93,10 @@ export default function ServicesPage() {
         <p>
           Before that I ran IT operations for a global advertising group, first in London and then
           in Atlanta. I was the layer between IBM’s managed service and 12 local business units.
+        </p>
+        <p>
+          I’m based in Atlanta. I work on-site around the metro and remotely anywhere, and I’ll
+          travel for the right project.
         </p>
         <p>
           I take on consulting projects and contract roles. I’m open to the right full-time role
