@@ -1,0 +1,84 @@
+/* Wingate Associates colour tokens. Palette A: navy and teal from the logo.
+   Light is the default. Dark values follow the visitor's system setting. */
+:root{
+  color-scheme:light dark;
+  /* Brand constants, sampled from brand/wingate-logo.png. These never change with the scheme. */
+  --wa-navy:#0e2745;
+  --wa-teal:#296e7b;
+  --wa-slate:#75838e;
+  --wa-paper:#f6f6f2;
+
+  /* Surfaces */
+  --bg:#f6f6f2;
+  --surface:#ffffff;
+  --surface-sunken:#ecede7;
+  --grid-line:rgba(14,39,69,.055);
+
+  /* Text */
+  --text:#0e2745;
+  --text-muted:#4b5a6b;
+
+  /* Lines */
+  --border:#d6d9d6;
+  --border-strong:#8a96a1;
+
+  /* Accent, link, focus */
+  --accent:#296e7b;
+  --link:#1f6470;
+  --link-hover:#0e2745;
+  --focus:#296e7b;
+  --selection:rgba(41,110,123,.2);
+
+  /* Primary action */
+  --primary:#0e2745;
+  --primary-hover:#1a3a5e;
+  --primary-active:#081a30;
+  --on-primary:#ffffff;
+
+  /* Status: text colours (AA on bg and surface), dot colours (3:1 graphics), tinted panels */
+  --ok:#1c7346;
+  --warn:#8f5300;
+  --critical:#b02a1e;
+  --ok-dot:#2a9a5f;
+  --warn-dot:#b07400;
+  --critical-dot:#d23a2c;
+  --ok-bg:#e6f2ea;
+  --ok-border:#9ccbb0;
+  --warn-bg:#fbf1dc;
+  --warn-border:#e2c27a;
+  --critical-bg:#fbe9e6;
+  --critical-border:#e7a39b;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0b1420;
+    --surface:#111c2a;
+    --surface-sunken:#08101a;
+    --grid-line:rgba(127,203,211,.05);
+    --text:#e7ecf0;
+    --text-muted:#9cabb9;
+    --border:#22324a;
+    --border-strong:#5a6b80;
+    --accent:#5db5bf;
+    --link:#7fcbd3;
+    --link-hover:#e7ecf0;
+    --focus:#7fcbd3;
+    --selection:rgba(127,203,211,.25);
+    --primary:#5db5bf;
+    --primary-hover:#7fcbd3;
+    --primary-active:#4a9aa3;
+    --on-primary:#0b1420;
+    --ok:#5cc995;
+    --warn:#e9b453;
+    --critical:#ff8577;
+    --ok-dot:#4cc38a;
+    --warn-dot:#e8ad3f;
+    --critical-dot:#ff6b5e;
+    --ok-bg:#0f2419;
+    --ok-border:#2b5c40;
+    --warn-bg:#241c0c;
+    --warn-border:#6b5320;
+    --critical-bg:#2a1312;
+    --critical-border:#7a3830;
+  }
+}

@@ -1,0 +1,29 @@
+<!-- @dsCard group="Components" viewport="700x560" name="Header and footer" subtitle="Site header with mark and nav, mobile nav row, footer" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../../preview/theme.css">
+<link rel="stylesheet" href="../../preview/states.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>
+body{background:var(--bg);background-image:none;min-height:0;display:block;margin:0}
+.k{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.duo{display:grid;grid-template-columns:1fr 1fr}.duo>div{padding:18px 20px;min-width:0}
+.st{display:grid;gap:10px;align-content:start}
+.frame{border:1px solid var(--border);margin:0 20px 16px;background:var(--bg)}.m{width:375px}.w{display:flex;gap:20px;align-items:flex-start;padding:0 20px 20px}.w>div{display:grid;gap:8px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { SiteHeader, SiteFooter } = window.WingateAssociatesDesignSystem_495635;
+function Card(){return (<div><div data-theme="light" style={{padding:'18px 0 4px'}}><div style={{padding:'0 20px 8px'}} className="k">Desktop · light</div><div className="frame"><SiteHeader current="Services" markSrc="../../assets/wingate-mark.png" markDarkSrc={null} /></div><div className="st" style={{padding:"0 20px 16px"}}><span className="k">nav: default · hover · focus · active · current</span><header role="banner" style={{paddingInline:12}}><a href="#"><img src="../../assets/wingate-mark.png" alt="" width="32" height="32" />Wingate Associates</a><nav aria-label="Main"><ul><li><a href="#">Default</a></li><li><a href="#" data-demo="hover">Hover</a></li><li><a href="#" data-demo="focus">Focus</a></li><li><a href="#" data-demo="active">Active</a></li><li><a href="#" aria-current="page">Current</a></li></ul></nav></header></div></div><div data-theme="dark" style={{paddingTop:18}}><div className="w"><div><span className="k">375 · dark · nav on its own row</span><div className="frame m" style={{margin:0,height:121,overflow:"hidden"}}><iframe src="../../ui_kits/website/contact.html?theme=dark" width="375" height="121" style={{border:0,display:"block"}} title="Mobile header" /></div></div><div style={{flex:1}}><span className="k">Footer</span><div className="frame" style={{margin:0}}><SiteFooter /></div></div></div></div></div>);}
+ReactDOM.createRoot(document.getElementById('root')).render(<Card />);
+</script>
+</body>
+</html>

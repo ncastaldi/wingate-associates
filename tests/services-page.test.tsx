@@ -14,7 +14,7 @@ describe("ServicesPage", () => {
 
   it("has no placeholder notice and links to the contact page", () => {
     render(<ServicesPage />);
-    expect(screen.queryByRole("note")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Placeholder copy/)).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Tell me what’s broken" })).toHaveAttribute(
       "href",
       "/contact",

@@ -1,0 +1,19 @@
+<!-- @dsCard group="Spacing" viewport="700x220" name="Background grid" subtitle="32px hairline grid behind every page" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../preview/theme.css">
+<style>
+body{background:var(--bg);background-image:none;min-height:0;display:block;margin:0;padding:20px 24px}
+.k{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.pane{padding:16px 18px;border-radius:4px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.g{display:grid;grid-template-columns:1fr 1fr;height:180px}.g>div{background-image:var(--grid-pattern);background-size:32px 32px;background-position:-1px -1px;padding:16px;display:flex;align-items:flex-end}
+</style>
+</head>
+<body>
+<div class="g"><div data-theme="light"><span class="k">rgba(14,39,69,.055)</span></div><div data-theme="dark"><span class="k">rgba(127,203,211,.05)</span></div></div>
+</body>
+</html>

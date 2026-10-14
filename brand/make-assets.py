@@ -3,8 +3,8 @@
 Usage, from the repo root (needs Pillow):
     python3 brand/make-assets.py brand/wingate-logo.png .
 
-Writes src/app/icon.png, favicon.ico, apple-icon.png, opengraph-image.png and
-public/logo-mark.png. The mark's centre and radius below are measured from the
+Writes src/app/icon.png, favicon.ico, apple-icon.png and opengraph-image.png.
+The header marks in public/ come from design/system/assets instead. The mark's centre and radius below are measured from the
 current logo; re-measure them if the source image changes.
 """
 import sys
@@ -52,7 +52,6 @@ def sized(n):
     return mark.resize((n, n), Image.LANCZOS)
 
 sized(256).save(f"{repo}/src/app/icon.png", optimize=True)
-sized(96).save(f"{repo}/public/logo-mark.png", optimize=True)
 icons = [sized(n) for n in (16, 32, 48)]
 icons[2].save(f"{repo}/src/app/favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)], append_images=icons[:2])
 apple = Image.new("RGBA", (180, 180), BG + (255,))

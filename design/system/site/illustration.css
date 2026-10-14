@@ -1,0 +1,60 @@
+/* Illustration style. Diagrams are built from the same parts as the interface:
+   1px rules, mono labels, skeleton bars for records, and status dots. One finding per diagram. */
+figure[data-illustration]{margin:0;padding:var(--space-4);background:var(--surface);border:var(--rule) solid var(--border);border-radius:var(--radius);font-family:var(--font-mono);font-size:.75rem;line-height:1.3;letter-spacing:var(--tracking-mono);text-transform:uppercase;color:var(--text-muted)}
+figure[data-illustration] ol,figure[data-illustration] ul{margin:0;padding:0;list-style:none}
+figure[data-illustration]>figcaption,figure[data-illustration]>p{display:flex;justify-content:space-between;align-items:center;gap:var(--space-3);margin:0;max-width:none;color:var(--text)}
+figure[data-illustration]>figcaption{margin-top:var(--space-4);padding-top:var(--space-3);border-top:var(--rule) solid var(--border)}
+figure[data-illustration]>p{margin-bottom:var(--space-3)}
+figure[data-illustration] [data-status]::before{width:.4375rem;height:.4375rem;vertical-align:.05em}
+
+/* Record bar: a stand-in for one account, ticket or setting. Widths repeat so rows read as data, not noise. */
+
+/* Rows as lists (queue, scan) */
+figure[data-illustration] li{display:flex;align-items:center;gap:var(--space-2);min-height:2.25rem;padding-inline:var(--space-3);border-bottom:var(--rule) solid var(--border)}
+figure[data-illustration] li:first-child{border-top:var(--rule) solid var(--border)}
+figure[data-illustration] li::before{margin:0;order:-2}
+figure[data-illustration] li::after{content:"";order:-1;flex:0 1 62%;height:6px;border-radius:1px;background:var(--border)}
+figure[data-illustration] li:nth-child(4n+2)::after{flex-basis:44%}
+figure[data-illustration] li:nth-child(4n+3)::after{flex-basis:74%}
+figure[data-illustration] li:nth-child(4n)::after{flex-basis:52%}
+figure[data-illustration] li>span{margin-left:auto;color:var(--text)}
+figure[data-illustration] li[data-flag]{background:var(--warn-bg)}
+figure[data-illustration] li[data-flag]::after{background:var(--warn-border)}
+figure[data-illustration] li[data-flag="critical"]{background:var(--critical-bg)}
+figure[data-illustration] li[data-flag="critical"]::after{background:var(--critical-border)}
+
+/* Systems compared side by side (table) */
+figure[data-illustration] table{width:100%;border-collapse:collapse;table-layout:fixed}
+figure[data-illustration] th{padding:0 var(--space-3) var(--space-3);text-align:left;font-weight:var(--weight-medium);color:var(--text);border-bottom:var(--rule) solid var(--border-strong)}
+figure[data-illustration] td{height:2.25rem;padding:0 var(--space-3);border-bottom:var(--rule) solid var(--border);white-space:nowrap;overflow:hidden}
+figure[data-illustration] tbody tr:last-child td{border-bottom:0}
+figure[data-illustration] th+th,figure[data-illustration] td+td{border-left:var(--rule) solid var(--border)}
+figure[data-illustration] td::before{content:"";display:inline-block;width:.4375rem;height:.4375rem;margin-right:var(--space-2);border-radius:var(--radius-dot);background:var(--ok-dot);vertical-align:middle}
+figure[data-illustration] td:empty::after{content:"";display:inline-block;width:calc(62% - 1.25rem);height:6px;border-radius:1px;background:var(--border);vertical-align:middle}
+figure[data-illustration] tr:nth-child(4n+2) td:empty::after{width:calc(44% - 1.25rem)}
+figure[data-illustration] tr:nth-child(4n+3) td:empty::after{width:calc(74% - 1.25rem)}
+figure[data-illustration] tr:nth-child(4n) td:empty::after{width:calc(52% - 1.25rem)}
+figure[data-illustration] tr[data-flag] td{background:var(--critical-bg);color:var(--text)}
+figure[data-illustration] tr[data-flag] td::before{background:var(--critical-dot);box-shadow:0 0 0 3px color-mix(in srgb,var(--critical-dot) 22%,transparent)}
+figure[data-illustration] tr[data-flag] td:first-child{color:var(--critical)}
+
+/* Queue before and after */
+figure[data-illustration="queue"]>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-4);align-items:end}
+figure[data-illustration="queue"]>div>div>p{margin:var(--space-3) 0 0;color:var(--text)}
+
+/* Scan progress line */
+figure[data-illustration="scan"]>hr{height:2px;margin:0;border:0;background:var(--accent)}
+figure[data-illustration="scan"] li:first-child{border-top:0}
+
+@media (prefers-reduced-motion:no-preference){
+  @keyframes wa-row-in{from{opacity:0;transform:translateY(3px)}}
+  @keyframes wa-scan{from{transform:scaleX(0)}}
+  figure[data-illustration] tbody tr,figure[data-illustration] li{animation:wa-row-in var(--dur-slow) var(--ease) both}
+  figure[data-illustration] :is(tr,li):nth-child(2){animation-delay:60ms}
+  figure[data-illustration] :is(tr,li):nth-child(3){animation-delay:120ms}
+  figure[data-illustration] :is(tr,li):nth-child(4){animation-delay:180ms}
+  figure[data-illustration] :is(tr,li):nth-child(5){animation-delay:240ms}
+  figure[data-illustration] :is(tr,li):nth-child(6){animation-delay:300ms}
+  figure[data-illustration] :is(tr,li):nth-child(n+7){animation-delay:360ms}
+  figure[data-illustration="scan"]>hr{transform-origin:left;animation:wa-scan 900ms var(--ease) both}
+}

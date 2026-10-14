@@ -1,0 +1,20 @@
+<!-- @dsCard group="Iconography" viewport="700x250" name="Status dots" subtitle="The only coloured marker. Always paired with a word." -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../preview/theme.css">
+<style>
+body{background:var(--bg);background-image:none;min-height:0;display:block;margin:0;padding:20px 24px}
+.k{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.pane{padding:16px 18px;border-radius:4px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.r{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;font-size:14px}.r>div{display:grid;gap:6px}.rules{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;font-size:13px;color:var(--text-muted);line-height:1.4}.rules b{color:var(--text)}
+</style>
+</head>
+<body>
+<div class="r"><div><span data-status="ok">Ok</span><span class="k">ok-dot</span></div><div><span data-status="warn">Warning</span><span class="k">warn-dot</span></div><div><span data-status="critical">Critical</span><span class="k">critical-dot + 3px ring</span></div><div><span data-status="idle">Idle</span><span class="k">border-strong</span></div></div>
+<div class="rules"><div><b>Use</b> for a real state: a flagged account, a form error, a success message, a diagram finding.</div><div><b>Don’t</b> use as bullets, decoration, or to rank the problem list.</div><div><b>One</b> critical per view. If two things are red, neither is.</div><div><b>Never</b> colour alone. A label or caption carries the meaning.</div></div>
+</body>
+</html>

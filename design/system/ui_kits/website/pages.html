@@ -1,0 +1,38 @@
+<!-- @dsCard group="Website" viewport="1760x1100" name="All pages" subtitle="Home, Services, Contact at 1280 and 375, light and dark" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Page templates · Wingate Associates</title>
+<link rel="stylesheet" href="../../styles.css">
+<style>
+body{background:#e4e5e0;background-image:none;padding:40px;display:block}
+.pg{display:flex;gap:32px;align-items:flex-start;margin-bottom:56px}
+.fr{display:grid;gap:10px}
+.fr span{font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#4b5a6b}
+.box{overflow:hidden;border:1px solid #c9ccc6;background:#fff}
+iframe{border:0;display:block;transform-origin:0 0}
+</style>
+</head>
+<body>
+<div id="out"></div>
+<script>
+const pages=[['index.html','Home'],['services.html','Services'],['contact.html','Contact']];
+const frames=[['light',1280,.42],['dark',1280,.42],['light',375,.62],['dark',375,.62]];
+const out=document.getElementById('out');
+pages.forEach(([f,name])=>{
+  const row=document.createElement('div');row.className='pg';
+  frames.forEach(([t,w,s])=>{
+    const fr=document.createElement('div');fr.className='fr';
+    fr.innerHTML=`<span>${name} · ${w}px · ${t}</span>`;
+    const box=document.createElement('div');box.className='box';
+    const ifr=document.createElement('iframe');ifr.src=`${f}?theme=${t}`;ifr.width=w;ifr.height=900;ifr.title=`${name} ${w} ${t}`;ifr.style.transform=`scale(${s})`;
+    box.style.width=w*s+'px';box.style.height=900*s+'px';
+    ifr.onload=()=>{const h=Math.min(ifr.contentDocument.documentElement.scrollHeight,2600);ifr.height=h;box.style.height=h*s+'px';};
+    box.appendChild(ifr);fr.appendChild(box);row.appendChild(fr);
+  });
+  out.appendChild(row);
+});
+</script>
+</body>
+</html>

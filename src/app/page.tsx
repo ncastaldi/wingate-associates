@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SystemsDiff } from "@/components/systems-diff";
 import { HOME_DESCRIPTION, pageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = pageMetadata({ description: HOME_DESCRIPTION, path: "/" });
@@ -7,28 +8,41 @@ export const metadata: Metadata = pageMetadata({ description: HOME_DESCRIPTION, 
 export default function HomePage() {
   return (
     <main>
-      <h1>Most IT problems aren’t technology problems.</h1>
-      <p>
-        They’re process problems, data problems, or nobody-noticed-until-it-was-a-crisis problems. I
-        find those and I build the fix.
-      </p>
-      <p>
-        I work with companies that have outgrown “someone handles IT.” Usually there’s an MSP or a
-        small team doing the work. Nobody owns making it run well.
-      </p>
+      <header data-hero="">
+        <h1>Most IT problems aren’t technology problems.</h1>
+        <p>
+          They’re process problems, data problems, or nobody-noticed-until-it-was-a-crisis problems.
+          I find those and I build the fix.
+        </p>
+        <p>
+          I work with companies that have outgrown “someone handles IT.” Usually there’s an MSP or a
+          small team doing the work. Nobody owns making it run well.
+        </p>
+        <p>
+          <Link data-button="primary" href="/contact">
+            Tell me what’s broken
+          </Link>
+          <Link data-button="secondary" href="/services">
+            See services
+          </Link>
+        </p>
+        <SystemsDiff />
+      </header>
 
-      <h2>What that tends to look like</h2>
-      <ul>
-        <li>Tickets sit for days and nobody can say why.</li>
-        <li>People who left months ago still have working accounts.</li>
-        <li>Nobody is sure who has access to what.</li>
-        <li>The MSP closes tickets but the same problems come back.</li>
-        <li>How things actually work lives in one person’s head.</li>
-      </ul>
+      <section aria-labelledby="problems-heading">
+        <h2 id="problems-heading">What that tends to look like</h2>
+        <ul data-list="queue">
+          <li>Tickets sit for days and nobody can say why.</li>
+          <li>People who left months ago still have working accounts.</li>
+          <li>Nobody is sure who has access to what.</li>
+          <li>The MSP closes tickets but the same problems come back.</li>
+          <li>How things actually work lives in one person’s head.</li>
+        </ul>
+      </section>
 
       <section aria-labelledby="work-heading">
         <h2 id="work-heading">Recent work</h2>
-        <ul>
+        <ul data-list="cards">
           <li>
             <h3>Nexus</h3>
             <p>
@@ -50,11 +64,6 @@ export default function HomePage() {
           </li>
         </ul>
       </section>
-
-      <p>
-        <Link href="/services">See services</Link> or{" "}
-        <Link href="/contact">tell me what’s broken</Link>.
-      </p>
     </main>
   );
 }

@@ -1,5 +1,8 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+const pathname = vi.hoisted(() => ({ current: "/" }));
+vi.mock("next/navigation", () => ({ usePathname: () => pathname.current }));
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
@@ -11,6 +14,15 @@ describe("SiteHeader", () => {
     expect(nav).toHaveTextContent("Services");
     expect(screen.getByRole("link", { name: "Services" })).toHaveAttribute("href", "/services");
     expect(screen.getByRole("link", { name: "Contact" })).toHaveAttribute("href", "/contact");
+  });
+});
+
+describe("SiteNav", () => {
+  it("marks the current page's link", () => {
+    pathname.current = "/services";
+    render(<SiteHeader />);
+    expect(screen.getByRole("link", { name: "Services" })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("link", { name: "Contact" })).not.toHaveAttribute("aria-current");
   });
 });
 

@@ -1,0 +1,6 @@
+/* Self-hosted webfonts. Files live in /fonts. Both families are SIL Open Font License 1.1.
+   Instrument Sans (Rodrigo Fuenzalida, Jordan Egstad), variable weight 400-700, latin subset, via Fontsource.
+   IBM Plex Mono (IBM / Mike Abbink, Bold Monday), 400 and 500, latin subset, via Fontsource. */
+@font-face{font-family:"Instrument Sans";src:url("../fonts/InstrumentSans-Variable.woff2") format("woff2");font-weight:400 700;font-style:normal;font-display:swap}
+@font-face{font-family:"IBM Plex Mono";src:url("../fonts/IBMPlexMono-400.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"IBM Plex Mono";src:url("../fonts/IBMPlexMono-500.woff2") format("woff2");font-weight:500;font-style:normal;font-display:swap}

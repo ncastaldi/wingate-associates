@@ -1,0 +1,19 @@
+<!-- @dsCard group="Spacing" viewport="700x190" name="Borders, radii, elevation" subtitle="Hairlines, near-square corners, one raised level" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../preview/theme.css">
+<style>
+body{background:var(--bg);background-image:none;min-height:0;display:block;margin:0;padding:20px 24px}
+.k{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.pane{padding:16px 18px;border-radius:4px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.r{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}.r>div{display:grid;gap:8px}.b{height:70px;background:var(--surface);border:1px solid var(--border)}
+</style>
+</head>
+<body>
+<div class="r"><div><div class="b" style="border-radius:2px"></div><span class="k">radius-sm 2</span></div><div><div class="b" style="border-radius:4px"></div><span class="k">radius 4</span></div><div><div class="b" style="border-color:var(--border-strong)"></div><span class="k">border-strong</span></div><div><div class="b" style="border-top:1.5px solid var(--text)"></div><span class="k">rule-strong 1.5</span></div><div><div class="b" style="border-radius:4px;box-shadow:var(--shadow-raised)"></div><span class="k">shadow-raised</span></div></div>
+</body>
+</html>

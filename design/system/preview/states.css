@@ -1,0 +1,17 @@
+/* Preview only: freezes interaction states for specimen cards. Mirrors the :hover/:focus-visible/:active rules in site/site.css. */
+[data-demo="hover"][data-button="primary"]{background:var(--primary-hover)}
+[data-demo="hover"][data-button="secondary"]{background:var(--surface);border-color:var(--text)}
+[data-demo="hover"][data-button]::after{transform:translateX(3px)}
+[data-demo="active"][data-button="primary"]{background:var(--primary-active)}
+[data-demo="active"][data-button="secondary"]{background:var(--surface-sunken)}
+[data-demo="focus"]{outline:var(--focus-width) solid var(--focus);outline-offset:var(--focus-offset)}
+[data-demo="focus"][data-button]{outline-offset:2px}
+a[data-demo="hover"]:not([data-button]){color:var(--link-hover);text-decoration-color:currentColor;text-decoration-thickness:2px}
+a[data-demo="active"]:not([data-button]){color:var(--accent)}
+header nav a[data-demo="hover"]{color:var(--text)}
+header nav a[data-demo="active"]{color:var(--accent)}
+ul[data-list="cards"]>li[data-demo="hover"]{border-color:var(--border-strong);box-shadow:var(--shadow-raised)}
+ul[data-list="cards"]>li[data-demo="hover"] h3 a{text-decoration-thickness:2px;text-decoration-color:currentColor}
+ul[data-list="cards"]>li[data-demo="active"]{background:var(--surface-sunken)}
+input[data-demo="hover"],textarea[data-demo="hover"]{border-color:var(--text-muted)}
+input[data-demo="focus"],textarea[data-demo="focus"]{border-color:var(--focus);outline-offset:0}

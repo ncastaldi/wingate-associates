@@ -12,9 +12,13 @@ export const metadata: Metadata = pageMetadata({
 export default function ContactPage() {
   return (
     <main>
-      <h1>Contact</h1>
-      <p>Tell me what’s broken and what you’ve tried so far. I’ll reply by email.</p>
-      <ContactForm action={submitLead} />
+      <header>
+        <h1>Contact</h1>
+        <p>Tell me what’s broken and what you’ve tried so far. I’ll reply by email.</p>
+      </header>
+      <section aria-label="Contact form">
+        <ContactForm action={submitLead} />
+      </section>
     </main>
   );
 }

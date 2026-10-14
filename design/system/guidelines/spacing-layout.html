@@ -1,0 +1,20 @@
+<!-- @dsCard group="Spacing" viewport="700x260" name="Layout grid and breakpoints" subtitle="72rem column, fluid gutter, 4 to 12 columns" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../preview/theme.css">
+<style>
+body{background:var(--bg);background-image:none;min-height:0;display:block;margin:0;padding:20px 24px}
+.k{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.pane{padding:16px 18px;border-radius:4px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.cols{display:grid;gap:6px;height:70px;margin-bottom:6px}.cols i{background:color-mix(in srgb,var(--accent) 14%,transparent);border:1px dashed color-mix(in srgb,var(--accent) 50%,transparent)}.bp{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:14px;border-top:1px solid var(--border)}.bp>div{padding:8px 10px 0 0;font-size:13px}.bp b{display:block}
+</style>
+</head>
+<body>
+<span class="k">lg ≥ 1024 · 12 columns</span><div class="cols" style="grid-template-columns:repeat(12,1fr)"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="k">base 375 · 4 columns · 20px gutter</span><div class="cols" style="grid-template-columns:repeat(4,1fr);width:180px;height:40px"><i></i><i></i><i></i><i></i></div>
+<div class="bp"><div><b>base</b><span class="k">375+ · 1 col content</span></div><div><b>sm 30em</b><span class="k">480 · nav inline</span></div><div><b>md 48em</b><span class="k">768 · 2-col queue, 3 tiles</span></div><div><b>lg 64em</b><span class="k">1024 · hero split 7/5</span></div></div>
+</body>
+</html>

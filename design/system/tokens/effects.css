@@ -1,0 +1,39 @@
+:root{
+  /* Borders and radii. Corners stay nearly square; the only round shapes are status dots. */
+  --rule:1px;
+  --rule-strong:1.5px;
+  --radius-sm:2px;
+  --radius:4px;
+  --radius-dot:50%;
+
+  /* Elevation. Flat by default. One raised level, used for card hover only. */
+  --shadow-none:none;
+  --shadow-raised:0 1px 2px rgba(14,39,69,.06),0 10px 24px -14px rgba(14,39,69,.22);
+
+  /* Focus ring */
+  --focus-width:2px;
+  --focus-offset:3px;
+
+  /* Background grid */
+  --grid-size:32px;
+  --grid-pattern:linear-gradient(to right,var(--grid-line) 1px,transparent 1px),linear-gradient(to bottom,var(--grid-line) 1px,transparent 1px);
+
+  /* Status dot */
+  --dot-size:.5rem;
+
+  /* Motion. Short and functional. All durations drop to 0 under reduced motion. */
+  --ease:cubic-bezier(.2,0,0,1); /* @kind other */
+  --dur-fast:120ms; /* @kind other */
+  --dur:200ms; /* @kind other */
+  --dur-slow:480ms; /* @kind other */
+}
+@media (prefers-color-scheme:dark){
+  :root{--shadow-raised:0 0 0 1px var(--border-strong)}
+}
+@media (prefers-reduced-motion:reduce){
+  :root{
+    --dur-fast:0ms; /* @kind other */
+    --dur:0ms; /* @kind other */
+    --dur-slow:0ms; /* @kind other */
+  }
+}
