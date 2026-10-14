@@ -20,7 +20,7 @@ The website for Wingate Associates, an independent consulting practice. It is a 
 ```bash
 nvm use                      # Node 24 (22 also works)
 npm ci
-cp .env.example .env         # then fill in the values
+cp .env.example .env         # fill in the values; uncomment DATABASE_URL
 docker compose up -d db      # local Postgres (needs POSTGRES_* from .env)
 npm run db:migrate
 npm run dev                  # http://localhost:3000
