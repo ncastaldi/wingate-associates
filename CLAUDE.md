@@ -81,6 +81,13 @@ In production the `web` container and Postgres run from `compose.yaml`; the `clo
 - First Playwright test (`tests/e2e/contact-form.spec.ts`): field errors and honeypot. The happy path needs Postgres and Resend, so it is not covered yet.
 - Plausible script wiring (`src/components/plausible-script.tsx`, rendered in the root layout). It reads only `NEXT_PUBLIC_PLAUSIBLE_SRC` and renders nothing when unset. ADR-005 is amended to drop `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`.
 - v1 pages (#4): real Home page, combined Services page (`src/app/services/page.tsx`), and a shared header and footer in the root layout (`src/components/site-header.tsx`, `site-footer.tsx`). All copy is placeholder text flagged by `PlaceholderNotice`; the owner must replace it before launch. The pages are unstyled, like the rest of the site.
+- `migrate` and `web` use `pull_policy: build`, so Komodo's Compose Pull stage skips them and `up` builds them on the host (#35).
+- Launch basics on `https://wingate.associates` (#36 to #39). The origin is `SITE_URL` in `src/lib/site.ts`.
+  - `src/app/robots.ts` allows all crawlers and names the sitemap.
+  - `src/app/sitemap.ts` lists `/`, `/services` and `/contact`. Add new public pages to it by hand.
+  - `src/app/icon.svg`, `favicon.ico` and `apple-icon.png` hold a placeholder "W" monogram until there is a logo.
+  - The root layout sets `metadataBase`. Each page builds its title, description, canonical URL, Open Graph and Twitter tags with `pageMetadata()` from `src/lib/page-metadata.ts`. Next merges metadata shallowly, so a page that set `openGraph` on its own would lose the share image from `src/app/opengraph-image.tsx`. The descriptions are placeholders, like the page copy.
+- First Komodo deploy (2026-10-14, commit `4244833`): the stack built on the host, `migrate` ran, and the tunnel connector is healthy. See `deploy/README.md` for the remaining setup.
 
 ### In progress
 
@@ -89,7 +96,8 @@ In production the `web` container and Postgres run from `compose.yaml`; the `clo
 - Real copy for Home and Services (replace the placeholders), then #4 can close
 - Portfolio and case studies: deferred past v1.
 - Self-hosted booking in the compose stack: evaluate Cal.diy or another self-hostable scheduler first (ADR-006 amendment, #9)
-- First deploy through Komodo and the Cloudflare Tunnel (`deploy/README.md`)
+- Finish the first deploy (#10): add the tunnel's public hostname route, set a real `POSTGRES_PASSWORD`, swap the email variables into the right fields, then run the smoke test in `deploy/README.md`
+- Styling (the site has no CSS), rate limiting on the contact form (#22), edge security headers from the domain runbook (without its CSP), and Playwright in CI
 
 ## Open questions
 
@@ -111,4 +119,4 @@ In production the `web` container and Postgres run from `compose.yaml`; the `clo
 
 ---
 
-*Last updated: 2026-10-13 | Session: Cal.com ADR amendment and first Playwright test*
+*Last updated: 2026-10-14 | Session: launch basics (robots, sitemap, favicon, sharing metadata) and first Komodo deploy*
