@@ -80,12 +80,13 @@ In production the `web` container and Postgres run from `compose.yaml`; the Clou
 - Contact page (`src/app/contact/page.tsx`) with a `ContactForm` client component (`useActionState`, field errors, success state) and a honeypot field (`HONEYPOT_FIELD` in `src/lib/lead-schema.ts`): a filled honeypot returns `ok: true` without storing or emailing. There is no rate limiting yet. The home page links to `/contact`. Tests now run `cleanup` after each test (`tests/setup.ts`).
 - First Playwright test (`tests/e2e/contact-form.spec.ts`): field errors and honeypot. The happy path needs Postgres and Resend, so it is not covered yet.
 - Plausible script wiring (`src/components/plausible-script.tsx`, rendered in the root layout). It reads only `NEXT_PUBLIC_PLAUSIBLE_SRC` and renders nothing when unset. ADR-005 is amended to drop `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`.
+- v1 pages (#4): real Home page, combined Services page (`src/app/services/page.tsx`), and a shared header and footer in the root layout (`src/components/site-header.tsx`, `site-footer.tsx`). All copy is placeholder text flagged by `PlaceholderNotice`; the owner must replace it before launch. The pages are unstyled, like the rest of the site.
 
 ### In progress
 
 ### Not started
 
-- v1 pages (#4): a real Home page and one combined Services page (services plus engagement models), with a shared header and footer, using clearly marked placeholder copy until the owner supplies the text. The contact page is done.
+- Real copy for Home and Services (replace the placeholders), then #4 can close
 - Portfolio and case studies: deferred past v1.
 - Self-hosted booking in the compose stack: evaluate Cal.diy or another self-hostable scheduler first (ADR-006 amendment, #9)
 - First deploy through Komodo and the Cloudflare Tunnel (`deploy/README.md`)

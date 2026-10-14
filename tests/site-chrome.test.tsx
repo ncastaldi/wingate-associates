@@ -1,0 +1,22 @@
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
+
+describe("SiteHeader", () => {
+  it("links the name to home and the main nav to Services and Contact", () => {
+    render(<SiteHeader />);
+    expect(screen.getByRole("link", { name: "Wingate Associates" })).toHaveAttribute("href", "/");
+    const nav = screen.getByRole("navigation", { name: "Main" });
+    expect(nav).toHaveTextContent("Services");
+    expect(screen.getByRole("link", { name: "Services" })).toHaveAttribute("href", "/services");
+    expect(screen.getByRole("link", { name: "Contact" })).toHaveAttribute("href", "/contact");
+  });
+});
+
+describe("SiteFooter", () => {
+  it("shows the company name in a contentinfo landmark", () => {
+    render(<SiteFooter />);
+    expect(screen.getByRole("contentinfo")).toHaveTextContent("Wingate Associates LLC");
+  });
+});
