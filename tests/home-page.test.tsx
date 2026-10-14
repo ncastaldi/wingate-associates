@@ -23,10 +23,17 @@ describe("HomePage", () => {
     expect(screen.queryByRole("note")).not.toBeInTheDocument();
   });
 
+  it("shows the identity drift diagram with an accessible description", () => {
+    render(<HomePage />);
+    expect(
+      screen.getByRole("img", { name: /HR, Active Directory and Entra ID compared/ }),
+    ).toBeInTheDocument();
+  });
+
   it("links to services and the contact page", () => {
     render(<HomePage />);
     expect(screen.getByRole("link", { name: "See services" })).toHaveAttribute("href", "/services");
-    expect(screen.getByRole("link", { name: "tell me what’s broken" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Tell me what’s broken" })).toHaveAttribute(
       "href",
       "/contact",
     );

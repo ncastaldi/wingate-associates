@@ -1,0 +1,32 @@
+<!-- @dsCard group="Components" viewport="700x900" name="Content patterns" subtitle="Section heading, queue rows, cards, tiles, stat, status dots" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../../preview/theme.css">
+<link rel="stylesheet" href="../../preview/states.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>
+body{background:var(--bg);background-image:none;min-height:0;display:block;margin:0}
+.k{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.duo{display:grid;grid-template-columns:1fr 1fr}.duo>div{padding:18px 20px;min-width:0}
+.st{display:grid;gap:10px;align-content:start}
+section{padding:0}section>h2{font-size:22px;margin-bottom:14px}ul[data-list="queue"]{grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,auto);grid-auto-flow:column;column-gap:24px}ul[data-list="queue"]>li{font-size:14px;padding-block:10px}ul[data-list="cards"]>li{padding:16px}ul[data-list="cards"] p{font-size:14px}ul[data-list="tiles"]{grid-template-columns:repeat(3,1fr)}.pad{padding:18px 20px;display:grid;gap:24px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { Section, ProblemList, CardList, EngagementTiles, StatCallout, StatusDot } = window.WingateAssociatesDesignSystem_495635;
+function Card(){return (<div><div data-theme="light" className="pad"><Section id="p" title="What that tends to look like"><ProblemList items={['Tickets sit for days and nobody can say why.','People who left months ago still have working accounts.','Nobody is sure who has access to what.','The MSP closes tickets but the same problems come back.','How things actually work lives in one person’s head.']} /></Section>
+<div><span className="k">Cards: plain · linked title (default, hover, focus, active)</span><ul data-list="cards" style={{gridTemplateColumns:'repeat(4,1fr)',gap:12,marginTop:8}}><li><h3>Nexus</h3><p>An MCP server I built in Python.</p></li><li><h3><a href="https://jobsquatch.us">Jobsquatch</a></h3><p>A text-based interview that builds a voice profile.</p></li><li data-demo="hover"><h3><a href="https://jobsquatch.us">Jobsquatch</a></h3><p>Hover</p></li><li data-demo="focus"><h3><a href="https://jobsquatch.us">Jobsquatch</a></h3><p>Focus-visible</p></li></ul></div></div>
+<div data-theme="dark" className="pad"><EngagementTiles tiles={[{title:'Assessment',body:'Fixed scope and fixed fee. Most clients start here.'},{title:'Project',body:'Scope and price agreed before I start.'},{title:'Ongoing',body:'A monthly retainer as your part-time IT operations lead.'}]} />
+<div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:24,alignItems:'end'}}><StatCallout from="24" to="7" caption="In one business unit of a 3,000-person company I took 24 roles down to 7." /><StatCallout from="5.05" to="4.65" caption="At the same company I took MTTR from 5.05 days to 4.65." /><div style={{display:'grid',gap:6,fontSize:14}}><StatusDot status="ok">Ok</StatusDot><StatusDot status="warn">Warning</StatusDot><StatusDot status="critical">1 mismatch</StatusDot></div></div></div></div>);}
+ReactDOM.createRoot(document.getElementById('root')).render(<Card />);
+</script>
+</body>
+</html>

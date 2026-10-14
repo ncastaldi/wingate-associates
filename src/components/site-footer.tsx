@@ -5,7 +5,8 @@ export function SiteFooter() {
   return (
     <footer>
       <p>
-        &copy; {new Date().getFullYear()} Wingate Associates LLC ·{" "}
+        <span>&copy; {new Date().getFullYear()} Wingate Associates LLC</span>
+        <span aria-hidden="true">·</span>
         <a href={LINKEDIN_URL}>LinkedIn</a>
       </p>
     </footer>

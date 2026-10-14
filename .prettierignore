@@ -15,3 +15,5 @@ test-results
 docs
 scripts
 LICENSE
+# The design system is kept exactly as delivered.
+design

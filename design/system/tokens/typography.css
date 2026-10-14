@@ -1,0 +1,33 @@
+:root{
+  --font-sans:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+
+  /* Scale. Mobile first; clamp() grows display and h1/h2 up to desktop. Sizes at 375px / 1280px. */
+  --text-display:clamp(2.5rem,1.6rem + 3.9vw,4.5rem); /* @kind other */   /* 40 / 72 */
+  --text-h1:clamp(2.25rem,1.8rem + 2vw,3.5rem); /* @kind other */          /* 36 / 56 */
+  --text-h2:clamp(1.5rem,1.35rem + .7vw,2rem); /* @kind other */           /* 24 / 32 */
+  --text-h3:1.1875rem;                                   /* 19 */
+  --text-lead:clamp(1.1875rem,1.1rem + .4vw,1.375rem); /* @kind other */   /* 19 / 22 */
+  --text-body:1.0625rem;                                 /* 17 */
+  --text-small:.875rem;                                  /* 14 */
+  --text-mono:.8125rem;                                  /* 13 */
+
+  --leading-display:1.02;
+  --leading-heading:1.12;
+  --leading-h3:1.3;
+  --leading-body:1.6;
+  --leading-small:1.5;
+
+  --tracking-display:-.035em;
+  --tracking-heading:-.022em;
+  --tracking-h3:-.01em;
+  --tracking-mono:.06em;
+
+  --weight-regular:400;
+  --weight-medium:500;
+  --weight-semibold:600;
+
+  --measure:38rem;        /* about 66 characters of body text */
+  --measure-narrow:30rem; /* lead paragraphs and forms */
+  --measure-display:14ch; /* keeps the hero headline to three or four lines */
+}

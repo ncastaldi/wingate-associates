@@ -1,0 +1,21 @@
+/* 4px base. Layout breakpoints (min-width, CSS cannot read custom properties in media queries):
+   sm 30em / 480px, md 48em / 768px, lg 64em / 1024px. Design and test from 375px up. */
+:root{
+  --space-1:.25rem;  /* 4 */
+  --space-2:.5rem;   /* 8 */
+  --space-3:.75rem;  /* 12 */
+  --space-4:1rem;    /* 16 */
+  --space-5:1.5rem;  /* 24 */
+  --space-6:2rem;    /* 32 */
+  --space-7:3rem;    /* 48 */
+  --space-8:4rem;    /* 64 */
+  --space-9:6rem;    /* 96 */
+  --space-10:8rem;   /* 128 */
+
+  --page-max:72rem;                       /* 1152 content width */
+  --gutter:clamp(1.25rem,4vw,2.5rem); /* @kind spacing */     /* 20 at 375, 40 from 1000 */
+  --grid-columns:12; /* @kind other */                      /* 4 below md */
+  --grid-gap:clamp(1rem,2.5vw,2rem);
+  --section-gap:clamp(4rem,3rem + 4vw,7rem);
+  --header-height:4rem;
+}

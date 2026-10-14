@@ -1,0 +1,19 @@
+<!-- @dsCard group="Motion" viewport="700x230" name="Motion tokens" subtitle="Three durations, one easing; all zero under reduced motion" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../preview/theme.css">
+<style>
+body{background:var(--bg);background-image:none;min-height:0;display:block;margin:0;padding:20px 24px}
+.k{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.pane{padding:16px 18px;border-radius:4px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.r{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.r>div{border-top:1px solid var(--border);padding-top:10px;font-size:13px;color:var(--text-muted);line-height:1.45}.r b{display:block;color:var(--text);font-size:15px}.demo{display:flex;gap:14px;margin-top:18px;align-items:center}
+</style>
+</head>
+<body>
+<div class="r"><div><b>120ms · fast</b>Colour on links and buttons, arrow nudge 3px on hover.</div><div><b>200ms · base</b>Card border and shadow on hover.</div><div><b>480ms · slow</b>Diagram rows fade in once, 60ms stagger. Scan line draws once.</div></div><div class="demo"><a data-button="primary" href="#">Hover me</a><span class="k">ease cubic-bezier(.2,0,0,1) · nothing loops, nothing bounces</span></div>
+</body>
+</html>
