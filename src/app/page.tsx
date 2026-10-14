@@ -1,5 +1,9 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { PlaceholderNotice } from "@/components/placeholder-notice";
+import { HOME_DESCRIPTION, pageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = pageMetadata({ description: HOME_DESCRIPTION, path: "/" });
 
 export default function HomePage() {
   return (
