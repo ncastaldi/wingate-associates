@@ -3,9 +3,16 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const values = vi.fn();
 const insert = vi.fn(() => ({ values }));
 const sendLeadNotification = vi.fn();
+const checkLeadRateLimit = vi.fn();
+const requestHeaders = new Headers({ "cf-connecting-ip": "203.0.113.7" });
 
 vi.mock("@/db", () => ({ getDb: () => ({ insert }) }));
 vi.mock("@/lib/notify-lead", () => ({ sendLeadNotification }));
+vi.mock("next/headers", () => ({ headers: async () => requestHeaders }));
+vi.mock("@/lib/lead-rate-limit", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/lead-rate-limit")>()),
+  checkLeadRateLimit,
+}));
 
 const { submitLead } = await import("@/app/contact/actions");
 const { leads } = await import("@/db/schema");
@@ -23,7 +30,9 @@ beforeEach(() => {
   vi.clearAllMocks();
   values.mockResolvedValue(undefined);
   sendLeadNotification.mockResolvedValue(undefined);
+  checkLeadRateLimit.mockReturnValue("ok");
   vi.spyOn(console, "error").mockImplementation(() => {});
+  vi.spyOn(console, "warn").mockImplementation(() => {});
 });
 
 describe("submitLead", () => {
@@ -66,6 +75,28 @@ describe("submitLead", () => {
     expect(result).toEqual({ ok: false, formError: expect.any(String) });
     expect(JSON.stringify(result)).not.toContain("connection refused");
     expect(sendLeadNotification).not.toHaveBeenCalled();
+  });
+
+  it("counts the submission against the visitor's Cloudflare-reported address", async () => {
+    await submitLead(form(valid));
+    expect(checkLeadRateLimit).toHaveBeenCalledWith("203.0.113.7");
+  });
+
+  it.each(["client", "overall"])(
+    "stores and sends nothing when rate limited (%s)",
+    async (scope) => {
+      checkLeadRateLimit.mockReturnValue(scope);
+      const result = await submitLead(form(valid));
+      expect(result).toEqual({ ok: false, formError: expect.stringContaining("try again") });
+      expect(insert).not.toHaveBeenCalled();
+      expect(sendLeadNotification).not.toHaveBeenCalled();
+    },
+  );
+
+  it("does not count invalid or honeypot submissions against the limit", async () => {
+    await submitLead(form({ ...valid, email: "nope" }));
+    await submitLead(form({ ...valid, website: "http://spam.example" }));
+    expect(checkLeadRateLimit).not.toHaveBeenCalled();
   });
 
   it("still succeeds when the notification fails, because the lead is stored", async () => {
