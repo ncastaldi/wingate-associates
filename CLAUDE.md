@@ -36,7 +36,7 @@ A single Next.js app at the repo root; there is no frontend/backend split.
 
 Data flow for a lead: the contact form posts to a server action, which validates the input with zod, inserts a row into Postgres, then sends a notification email through Resend. Each external service sits behind one function in `src/lib/` or `src/db/`, so swapping it touches one file.
 
-In production the `web` container and Postgres run from `compose.yaml`; the Cloudflare Tunnel connector reaches `web` over the external `edge` Docker network, and no ports are published to the host.
+In production the `web` container and Postgres run from `compose.yaml`; the `cloudflared` service in the same stack reaches `web` over the `edge` Docker network, and no ports are published to the host.
 
 ## Constraints (non-negotiable)
 

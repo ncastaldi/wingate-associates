@@ -1,6 +1,6 @@
-# Deployed by Komodo. No ports are published to the host: the Cloudflare Tunnel
-# connector reaches `web` over the `edge` network, so nothing is exposed
-# directly (CLAUDE.md constraint 2).
+# Deployed by Komodo. No ports are published to the host: the `cloudflared`
+# connector below dials out to Cloudflare and reaches `web` over the `edge`
+# network, so nothing is exposed directly (CLAUDE.md constraint 2).
 #
 # Secrets are Komodo variables and never live in this repo. Cal.com is a later
 # addition (ADR-006).
@@ -23,6 +23,20 @@ services:
       migrate:
         condition: service_completed_successfully
     networks: [edge, internal]
+
+  # Cloudflare Tunnel connector. Remote-managed: the public hostname
+  # (https://wingate.associates -> http://web:3000) is set in the Cloudflare
+  # dashboard, and only the token lives here as a Komodo variable. It shares
+  # the `edge` network with `web` and cannot reach `db`.
+  cloudflared:
+    image: cloudflare/cloudflared:2026.10.0
+    command: tunnel --no-autoupdate run
+    restart: unless-stopped
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - web
+    networks: [edge]
 
   # Applies migrations on each deploy, then exits. `web` waits for it to succeed.
   migrate:
@@ -58,7 +72,6 @@ volumes:
   db-data:
 
 networks:
-  # Shared with the cloudflared connector; create it once on the target host.
+  # `web` and `cloudflared` only.
   edge:
-    external: true
   internal:
