@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { getEnv } from "./env";
+import { getEmailEnv } from "./env";
 
 export type Lead = { name: string; email: string; message: string };
 
@@ -25,7 +25,7 @@ const escapeHtml = (value: string) =>
 const oneLine = (value: string) => value.replace(/\s+/g, " ").trim();
 
 function resendSender(): EmailSender {
-  const resend = new Resend(getEnv().RESEND_API_KEY);
+  const resend = new Resend(getEmailEnv().RESEND_API_KEY);
   return (payload) => resend.emails.send(payload);
 }
 
@@ -34,7 +34,7 @@ export async function sendLeadNotification(
   lead: Lead,
   send: EmailSender = resendSender(),
 ): Promise<void> {
-  const env = getEnv();
+  const env = getEmailEnv();
   const { error } = await send({
     from: env.CONTACT_FROM_EMAIL,
     to: env.CONTACT_TO_EMAIL,
