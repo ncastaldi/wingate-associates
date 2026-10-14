@@ -85,17 +85,17 @@ In production the `web` container and Postgres run from `compose.yaml`; the Clou
 
 ### Not started
 
-- First real pages: services, engagement models, portfolio and case studies (the contact page is done)
+- v1 pages (#4): a real Home page and one combined Services page (services plus engagement models), with a shared header and footer, using clearly marked placeholder copy until the owner supplies the text. The contact page is done.
+- Portfolio and case studies: deferred past v1.
 - Self-hosted booking in the compose stack: evaluate Cal.diy or another self-hostable scheduler first (ADR-006 amendment, #9)
 - First deploy through Komodo and the Cloudflare Tunnel (`deploy/README.md`)
 
 ## Open questions
 
-1. Which pages and sections does v1 launch with, and in what order?
-2. What is the success metric beyond "a client or two in 6–12 months"? Define one before first release.
-3. Client portal and billing may be added later. Decide on an auth approach (the owner's self-hosted tooling is the default) before starting either.
-4. Is Plausible run self-hosted or on Plausible Cloud? The env vars support both.
-5. Local Node is 22 but the Docker image and `.nvmrc` target 24. Move local development to 24.
+1. What is the success metric beyond "a client or two in 6–12 months"? Define one before first release.
+2. Client portal and billing may be added later. Decide on an auth approach (the owner's self-hosted tooling is the default) before starting either.
+3. Is Plausible run self-hosted or on Plausible Cloud? The env vars support both.
+4. Local Node is 22 but the Docker image and `.nvmrc` target 24. Move local development to 24.
 
 ## Decision log
 
