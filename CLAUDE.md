@@ -57,6 +57,10 @@ In production the `web` container and Postgres run from `compose.yaml`; the `clo
 | `ADR_PATH` | docs/ADRs/ |
 | `SNAPSHOT_PATH` | docs/session-history/ |
 
+## Writing site copy
+
+Every piece of public copy (pages, meta descriptions, form messages, emails to visitors) must be in the owner's voice. Read `docs/voice/README.md` and the profile it points to, `docs/voice/voice-profile.json`, before drafting or editing copy. The short version: first person "I", short declarative sentences, no em dashes, no rhetorical questions, concrete numbers over claims, and none of the banned words listed there. The owner should never have to paste the profile again.
+
 ## Code style
 
 - TypeScript `strict` is on. No `any` without a comment explaining why.
@@ -101,6 +105,9 @@ In production the `web` container and Postgres run from `compose.yaml`; the `clo
 - `www` to apex redirect (a Cloudflare Redirect Rule); `www` currently serves the site directly
 - Local development: the README quick start runs `docker compose up -d db`, but `db` publishes no port, so `localhost:5432` cannot reach it. Needs a dev-only compose override or another local Postgres
 - Edge security headers from the domain runbook (without its CSP), and Playwright in CI
+- Contact form acknowledgement email to the visitor (#48). The site shows no direct contact details by design, so the form is the only way in.
+- Link Nexus-MCP from the site once the owner has tidied the repo and made it public. Until then it is described without a link.
+- Turn off Cloudflare RUM (Web Analytics) on the `wingate.associates` zone. Cloudflare injects its beacon into every page, which conflicts with constraint 5. It is not listed under account-level Web Analytics, so look in the zone's Speed settings.
 
 ## Open questions
 

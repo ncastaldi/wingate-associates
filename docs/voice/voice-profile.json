@@ -1,0 +1,113 @@
+{
+  "negative_corpus": {
+    "user_dispreferences": [
+      "horizontality",
+      "synergy",
+      "alignment",
+      "leverage (as a verb)",
+      "circle back",
+      "move the needle",
+      "at the end of the day",
+      "deep dive",
+      "bandwidth",
+      "touch base"
+    ],
+    "system_banned_tokens": [
+      "delve",
+      "testament",
+      "leverage",
+      "passionate about",
+      "thrilled to apply"
+    ]
+  },
+  "interpretive_layer": {
+    "tone": "Candid and self-aware without being self-congratulatory. They speak with the matter-of-fact directness of someone who has been burned enough times to stop performing optimism. There is dry resignation in how they describe organizational dysfunction, but it never tips into cynicism or self-pity.",
+    "vocabulary": "Concrete technical vocabulary used without ceremony — 'sharding,' 'stubs,' 'live creds,' 'agentic loop' — deployed the same way they would say 'walk down the hall.' Outside technical contexts, they favor plain Anglo-Saxon words over Latinate abstractions and distrust language that sounds constructed or invented. They name tools and vendors specifically rather than speaking in category generalities.",
+    "anti_patterns": "Corporate abstraction language feels visibly grating to them. Motivational framing, consensus-softening phrases, and performative positivity would ring false immediately. They do not use rhetorical questions, they do not build to dramatic conclusions, and they do not reframe setbacks as growth opportunities without prompting.",
+    "confidence_style": "Confidence expressed through specificity and restraint rather than assertion. They do not claim more certainty than they have — they will say 'I think' or 'honestly' before attributing an idea to an LLM rather than themselves. They let the concrete detail of what they built carry the claim, and they acknowledge gaps in memory or credit without embarrassment.",
+    "sentence_structure": "Short declarative sentences that carry weight on their own, occasionally chained together with 'and' or 'but' rather than subordinate clauses. They front-load the action or feeling, then trail off into qualification — as if they said the important part and are now deciding whether the rest is worth explaining. Paragraphs are lean, rarely more than three sentences before they stop."
+  },
+  "discourse_pragmatics": {
+    "epistemic_posture": {
+      "hedge_density_pct": 0.3774,
+      "booster_density_pct": 0.4717
+    },
+    "agency_distribution": {
+      "impersonal_passive_pct": 4.7059,
+      "first_person_plural_pct": 16.4706,
+      "first_person_singular_pct": 78.8235
+    },
+    "idiosyncratic_collocations": [
+      {
+        "word_a": "don't",
+        "word_b": "know",
+        "propinquity": 1
+      }
+    ]
+  },
+  "lexical_fingerprints": {
+    "vocabulary_richness": {
+      "herdans_c": 0.8823,
+      "type_token_ratio": 0.4406
+    },
+    "lexical_density_ratio": 0.4953,
+    "functional_word_preferences": {
+      "coordinating_conjunctions": [
+        "and",
+        "or",
+        "for",
+        "but",
+        "so"
+      ],
+      "subordinating_conjunctions": [
+        "that",
+        "as",
+        "than",
+        "before",
+        "if",
+        "when"
+      ]
+    }
+  },
+  "syntactic_architecture": {
+    "sentence_length": {
+      "standard_deviation": 8.8895,
+      "mean_words_per_sentence": 14.9296
+    },
+    "structural_cadence": {
+      "punctuation_density": {
+        "comma_per_100_words": 1.4151,
+        "parentheticals_count": 3,
+        "em_dash_per_100_words": 0
+      },
+      "preferred_pos_templates": [
+        "PRON + VERB + PREP + NOUN + CONJ + VERB + ADJ",
+        "NOUN + VERB + ADJ + CONJ + PRON + VERB + ADV",
+        "PRON + VERB + PRON + VERB + ADV + ADJ"
+      ]
+    }
+  },
+  "voice_profile_metadata": {
+    "profile_id": null,
+    "schema_version": "1.1.0",
+    "ingestion_format": "text_chat",
+    "adapted_from_legacy": false,
+    "interview_lifecycle": {
+      "phase_breakdown": {
+        "phase_2_friction_tokens": 254,
+        "phase_1_execution_tokens": 594,
+        "phase_3_philosophy_tokens": 212
+      },
+      "completed_phases": [
+        "execution",
+        "friction",
+        "philosophy"
+      ],
+      "total_tokens_collected": 1060
+    }
+  },
+  "generation_layer_overrides": {
+    "target_register": "written_formal",
+    "strictness_enforcement_mode": "deterministic_injection"
+  }
+}
