@@ -18,7 +18,7 @@ The audience is prospective consulting clients, and, for the portfolio, technica
 - **Validation:** zod
 - **Email:** Resend (the only approved hosted service)
 - **Analytics:** Plausible (script tag, env-configured)
-- **Booking (planned):** self-hosted Cal.com
+- **Booking (planned, on hold):** self-hosted scheduler, to be chosen; Cal.com closed its source in April 2026 (ADR-006 amendment)
 - **Tests:** Vitest + Testing Library; Playwright for end-to-end
 - **Lint/format:** ESLint (Next flat config), Prettier, `tsc --noEmit`
 - **Deployment:** Docker (multi-stage image), `compose.yaml` deployed by Komodo, exposed via a Cloudflare Tunnel
@@ -85,7 +85,7 @@ In production the `web` container and Postgres run from `compose.yaml`; the Clou
 
 - First real pages: services, engagement models, portfolio and case studies (the contact page is done)
 - First Playwright test for the contact form
-- Self-hosted Cal.com in the compose stack (ADR-006)
+- Self-hosted booking in the compose stack: evaluate Cal.diy or another self-hostable scheduler first (ADR-006 amendment, #9)
 - First deploy through Komodo and the Cloudflare Tunnel (`deploy/README.md`)
 
 ## Open questions
@@ -103,7 +103,7 @@ In production the `web` container and Postgres run from `compose.yaml`; the Clou
 - [ADR-003: Self-host by default, with Resend as the only hosted service](docs/ADRs/ADR-003-self-host-by-default.md) — the owner owns the tooling; email is the one exception
 - [ADR-004: Docker deployment via Komodo, exposed only through a Cloudflare Tunnel](docs/ADRs/ADR-004-docker-komodo-cloudflare-tunnel.md) — no host ports, secrets as Komodo variables
 - [ADR-005: Plausible as the only analytics](docs/ADRs/ADR-005-plausible-analytics.md) — env-configured script, no other trackers
-- [ADR-006: Self-hosted Cal.com for booking](docs/ADRs/ADR-006-self-hosted-calcom-booking.md) — planned, added to compose when booking is built
+- [ADR-006: Self-hosted Cal.com for booking](docs/ADRs/ADR-006-self-hosted-calcom-booking.md) — on hold: Cal.com closed its source in April 2026; re-evaluate Cal.diy or alternatives before adding to compose
 - [ADR-007: Vitest, ESLint, Prettier and Playwright as the test and lint toolchain](docs/ADRs/ADR-007-test-and-lint-toolchain.md) — CI runs lint, typecheck, test and build
 - [ADR-008: Build the client portal inside this repo, behind a clean boundary](docs/ADRs/ADR-008-client-portal-in-monorepo.md) — route-group separation now, extract on defined triggers
 
