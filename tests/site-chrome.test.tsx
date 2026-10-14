@@ -19,4 +19,13 @@ describe("SiteFooter", () => {
     render(<SiteFooter />);
     expect(screen.getByRole("contentinfo")).toHaveTextContent("Wingate Associates LLC");
   });
+
+  it("links to LinkedIn and shows no direct contact details", () => {
+    render(<SiteFooter />);
+    expect(screen.getByRole("link", { name: "LinkedIn" })).toHaveAttribute(
+      "href",
+      "https://www.linkedin.com/in/nathancastaldi",
+    );
+    expect(screen.getByRole("contentinfo")).not.toHaveTextContent("@");
+  });
 });

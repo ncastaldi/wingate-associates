@@ -8,14 +8,14 @@ describe("ServicesPage", () => {
     expect(screen.getByRole("heading", { level: 1, name: "Services" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { level: 2, name: "What I do" })).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { level: 2, name: "How we work together" }),
+      screen.getByRole("heading", { level: 2, name: "How we can work together" }),
     ).toBeInTheDocument();
   });
 
-  it("flags the copy as placeholder and links to the contact page", () => {
+  it("has no placeholder notice and links to the contact page", () => {
     render(<ServicesPage />);
-    expect(screen.getByRole("note")).toHaveTextContent("Placeholder copy");
-    expect(screen.getByRole("link", { name: "Tell me about your project" })).toHaveAttribute(
+    expect(screen.queryByRole("note")).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Tell me what’s broken" })).toHaveAttribute(
       "href",
       "/contact",
     );
