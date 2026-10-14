@@ -7,6 +7,9 @@
 services:
   web:
     image: ${WEB_IMAGE:-wingate-associates:latest}
+    # Built on the host, never pulled: there is no registry image, and Komodo
+    # runs `docker compose pull` first, which fails for a build-only image.
+    pull_policy: build
     build:
       context: .
       args:
@@ -41,6 +44,7 @@ services:
   # Applies migrations on each deploy, then exits. `web` waits for it to succeed.
   migrate:
     image: ${MIGRATE_IMAGE:-wingate-associates-migrate:latest}
+    pull_policy: build
     build:
       context: .
       target: migrate
