@@ -87,7 +87,8 @@ In production the `web` container and Postgres run from `compose.yaml`; the `clo
   - `src/app/sitemap.ts` lists `/`, `/services` and `/contact`. Add new public pages to it by hand.
   - `src/app/icon.svg`, `favicon.ico` and `apple-icon.png` hold a placeholder "W" monogram until there is a logo.
   - The root layout sets `metadataBase`. Each page builds its title, description, canonical URL, Open Graph and Twitter tags with `pageMetadata()` from `src/lib/page-metadata.ts`. Next merges metadata shallowly, so a page that set `openGraph` on its own would lose the share image from `src/app/opengraph-image.tsx`. The descriptions are placeholders, like the page copy.
-- First Komodo deploy (2026-10-14, commit `4244833`): the stack built on the host, `migrate` ran, and the tunnel connector is healthy. See `deploy/README.md` for the remaining setup.
+- First deploy (#10): live at `https://wingate.associates` since 2026-10-14 through Komodo and the Cloudflare Tunnel (`wingate.associates` and `www` routes). The smoke test in `deploy/README.md` passed, including a stored lead and a delivered Resend email. Credentials were rotated after the first deploy logs exposed them. `deploy/README.md` lists the traps found on the way.
+- Leads are stored even when the email settings are wrong: `src/lib/env.ts` validates `DATABASE_URL` (`getDbEnv`) separately from the Resend variables (`getEmailEnv`) (#42). `.env.example` pastes into Komodo as-is (#43).
 
 ### In progress
 
@@ -96,7 +97,8 @@ In production the `web` container and Postgres run from `compose.yaml`; the `clo
 - Real copy for Home and Services (replace the placeholders), then #4 can close
 - Portfolio and case studies: deferred past v1.
 - Self-hosted booking in the compose stack: evaluate Cal.diy or another self-hostable scheduler first (ADR-006 amendment, #9)
-- Finish the first deploy (#10): add the tunnel's public hostname route, set a real `POSTGRES_PASSWORD`, swap the email variables into the right fields, then run the smoke test in `deploy/README.md`
+- `www` to apex redirect (a Cloudflare Redirect Rule); `www` currently serves the site directly
+- Local development: the README quick start runs `docker compose up -d db`, but `db` publishes no port, so `localhost:5432` cannot reach it. Needs a dev-only compose override or another local Postgres
 - Styling (the site has no CSS), rate limiting on the contact form (#22), edge security headers from the domain runbook (without its CSP), and Playwright in CI
 
 ## Open questions

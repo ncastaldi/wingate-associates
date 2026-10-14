@@ -12,17 +12,32 @@ Notes for deploying the site. The deployable artefacts themselves (`Dockerfile`,
 ## One-time setup
 
 1. In the Cloudflare Zero Trust dashboard, create a remote-managed tunnel and copy its token (Networks, Tunnels). The token is the long string starting `eyJ` in the install command, not the tunnel ID (a UUID).
-2. Add a public hostname to the tunnel: `wingate.associates`, service `http://web:3000`. The `web` name resolves because `cloudflared` shares the `edge` network with it. Per the new domain runbook, `www` redirects to the apex.
-3. In Komodo, set the variables listed in `.env.example`, including `CLOUDFLARE_TUNNEL_TOKEN`.
-4. `NEXT_PUBLIC_PLAUSIBLE_SRC` is inlined at build time, so it must be available when the stack builds the image (compose passes it as a build arg). Changing it needs a rebuild, not just a restart.
-5. Deploy the stack. Nothing needs creating on the host first: `compose.yaml` defines the networks.
+2. Under the tunnel's Routes, add published applications for `wingate.associates` and `www.wingate.associates`, both with service `http://web:3000`. The `web` name resolves because `cloudflared` shares the `edge` network with it. Without a route the connector shows healthy but the site does not load. The runbook's `www`-to-apex redirect is a separate Cloudflare Redirect Rule.
+3. Paste `.env.example` into the Komodo stack's Environment and fill in the blanks. Each line is `NAME=value`; check the name is not pasted twice (`NAME=NAME=value`).
+4. In the Komodo stack settings, add `migrate` to Ignore Services. It runs once and exits, and Komodo otherwise reports the stack as unhealthy.
+5. `NEXT_PUBLIC_PLAUSIBLE_SRC` is inlined at build time, so it must be available when the stack builds the image (compose passes it as a build arg). Changing it needs a rebuild, not just a restart.
+6. Deploy the stack. Nothing needs creating on the host first: `compose.yaml` defines the networks and the volume.
+
+## Things that bite
+
+- **Komodo's deploy log prints every secret.** The Compose Config stage shows the resolved environment. Delete that stage before sharing a log; the Compose Up stage and `docker logs <container>` are enough to debug.
+- **Environment changes need a redeploy.** A container keeps the values it was created with. Check what it actually has with `sudo docker exec wingate-associates-web-1 printenv CONTACT_TO_EMAIL | cat -A`.
+- **`POSTGRES_PASSWORD` is read only when the `db-data` volume is first created.** Changing it later makes `migrate` fail with `password authentication failed`. With real leads stored, change it inside the database first (`ALTER USER wingate PASSWORD '...'`), then in Komodo. With no data worth keeping, recreate the volume instead:
+  1. Destroy the stack in Komodo. This runs `docker compose down`, which keeps volumes.
+  2. `sudo docker ps -a --filter name=wingate-associates` lists nothing.
+  3. `sudo docker volume rm wingate-associates_db-data`. This deletes every stored lead.
+  4. Deploy. The log shows `Volume wingate-associates_db-data Creating`.
+- **A bad email setting does not lose leads.** The lead is stored first; the web log shows `Lead notification failed` with Resend's reason.
 
 ## First-deploy smoke test
 
+Passed on 2026-10-14.
+
 1. `migrate` exited 0 and `web`, `db` and `cloudflared` are running.
-2. `https://wingate.associates` loads, and `/services` and `/contact` too.
-3. `docker ps` shows no published host ports.
-4. Submit the contact form. A row appears in `leads` and the notification email arrives at `CONTACT_TO_EMAIL`.
+2. `https://wingate.associates` loads, and `/services`, `/contact`, `/robots.txt` and `/sitemap.xml` too.
+3. `sudo docker ps --filter name=wingate-associates` shows no published host ports (`3000/tcp` and `5432/tcp` are container-only).
+4. Submit the contact form. A row appears in `leads` and the notification email arrives at `CONTACT_TO_EMAIL`:
+   `sudo docker exec wingate-associates-db-1 psql -U wingate -d wingate -c 'select id, name, created_at from leads;'`
 
 ## What does not belong here
 
