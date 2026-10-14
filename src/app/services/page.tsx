@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PlaceholderNotice } from "@/components/placeholder-notice";
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
-  title: "Services | Wingate Associates",
+export const metadata: Metadata = pageMetadata({
+  title: "Services",
   description: "What Wingate Associates offers and how engagements work.",
-};
+  path: "/services",
+});
 
 export default function ServicesPage() {
   return (

@@ -13,7 +13,8 @@ describe("ContactPage", () => {
     expect(screen.getByRole("button", { name: "Send message" })).toBeInTheDocument();
   });
 
-  it("sets a page title", () => {
-    expect(metadata.title).toBe("Contact | Wingate Associates");
+  it("sets a page title and its canonical path", () => {
+    expect(metadata.title).toEqual({ absolute: "Contact | Wingate Associates" });
+    expect(metadata.alternates).toEqual({ canonical: "/contact" });
   });
 });

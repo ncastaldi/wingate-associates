@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/contact-form";
+import { pageMetadata } from "@/lib/page-metadata";
 import { submitLead } from "./actions";
 
-export const metadata: Metadata = {
-  title: "Contact | Wingate Associates",
+export const metadata: Metadata = pageMetadata({
+  title: "Contact",
   description: "Get in touch about a consulting engagement.",
-};
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (

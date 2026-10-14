@@ -21,7 +21,8 @@ describe("ServicesPage", () => {
     );
   });
 
-  it("sets a page title", () => {
-    expect(metadata.title).toBe("Services | Wingate Associates");
+  it("sets a page title and its canonical path", () => {
+    expect(metadata.title).toEqual({ absolute: "Services | Wingate Associates" });
+    expect(metadata.alternates).toEqual({ canonical: "/services" });
   });
 });

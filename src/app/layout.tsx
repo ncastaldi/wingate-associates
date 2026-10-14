@@ -3,10 +3,14 @@ import type { ReactNode } from "react";
 import { PlausibleScript } from "@/components/plausible-script";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { HOME_DESCRIPTION, pageMetadata } from "@/lib/page-metadata";
+import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Wingate Associates",
-  description: "Independent consulting: services, engagement models and technical portfolio.",
+  metadataBase: new URL(SITE_URL),
+  ...pageMetadata({
+    description: HOME_DESCRIPTION,
+  }),
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
