@@ -77,7 +77,7 @@ In production the `web` container and Postgres run from `compose.yaml`; the `clo
 - CI (`ci.yml`) for lint, typecheck, test, build and image build; Dependabot for npm and Docker.
 - First migration for the `leads` table (`drizzle/0000_low_fenris.sql`), applied and checked against a throwaway Postgres 17.
 - Lead-capture server action (`src/app/contact/actions.ts`): zod validation, Postgres insert, Resend notification. Env is validated lazily in `src/lib/env.ts`. The insert path was checked against a throwaway Postgres 17; the live Resend call has not been exercised yet.
-- Contact page (`src/app/contact/page.tsx`) with a `ContactForm` client component (`useActionState`, field errors, success state) and a honeypot field (`HONEYPOT_FIELD` in `src/lib/lead-schema.ts`): a filled honeypot returns `ok: true` without storing or emailing. There is no rate limiting yet. The home page links to `/contact`. Tests now run `cleanup` after each test (`tests/setup.ts`).
+- Contact page (`src/app/contact/page.tsx`) with a `ContactForm` client component (`useActionState`, field errors, success state) and a honeypot field (`HONEYPOT_FIELD` in `src/lib/lead-schema.ts`): a filled honeypot returns `ok: true` without storing or emailing. Submissions are rate limited in memory (#22): 5 per client IP (Cloudflare's `CF-Connecting-IP`) and 30 overall per hour, in `src/lib/lead-rate-limit.ts`. Only submissions that would store a lead count; a restart resets the counts. The home page links to `/contact`. Tests now run `cleanup` after each test (`tests/setup.ts`).
 - First Playwright test (`tests/e2e/contact-form.spec.ts`): field errors and honeypot. The happy path needs Postgres and Resend, so it is not covered yet.
 - Plausible script wiring (`src/components/plausible-script.tsx`, rendered in the root layout). It reads only `NEXT_PUBLIC_PLAUSIBLE_SRC` and renders nothing when unset. ADR-005 is amended to drop `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`.
 - v1 pages (#4): real Home page, combined Services page (`src/app/services/page.tsx`), and a shared header and footer in the root layout (`src/components/site-header.tsx`, `site-footer.tsx`). All copy is placeholder text flagged by `PlaceholderNotice`; the owner must replace it before launch. The pages are unstyled, like the rest of the site.
@@ -99,7 +99,7 @@ In production the `web` container and Postgres run from `compose.yaml`; the `clo
 - Self-hosted booking in the compose stack: evaluate Cal.diy or another self-hostable scheduler first (ADR-006 amendment, #9)
 - `www` to apex redirect (a Cloudflare Redirect Rule); `www` currently serves the site directly
 - Local development: the README quick start runs `docker compose up -d db`, but `db` publishes no port, so `localhost:5432` cannot reach it. Needs a dev-only compose override or another local Postgres
-- Styling (the site has no CSS), rate limiting on the contact form (#22), edge security headers from the domain runbook (without its CSP), and Playwright in CI
+- Styling (the site has no CSS), edge security headers from the domain runbook (without its CSP), and Playwright in CI
 
 ## Open questions
 
