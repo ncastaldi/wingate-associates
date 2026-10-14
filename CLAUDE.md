@@ -106,7 +106,7 @@ Every piece of public copy (pages, meta descriptions, form messages, emails to v
 - Local development: the README quick start runs `docker compose up -d db`, but `db` publishes no port, so `localhost:5432` cannot reach it. Needs a dev-only compose override or another local Postgres
 - Edge security headers from the domain runbook (without its CSP), and Playwright in CI
 - Contact form acknowledgement email to the visitor (#48). The site shows no direct contact details by design, so the form is the only way in.
-- Link Nexus-MCP from the site once the owner has tidied the repo and made it public. Until then it is described without a link.
+- Link Nexus from the site once the owner has tidied the repo and made it public. Until then it is described without a link.
 - Turn off Cloudflare RUM (Web Analytics) on the `wingate.associates` zone. Cloudflare injects its beacon into every page, which conflicts with constraint 5. It is not listed under account-level Web Analytics, so look in the zone's Speed settings.
 
 ## Open questions
