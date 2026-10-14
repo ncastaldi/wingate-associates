@@ -1,34 +1,48 @@
 import { describe, expect, it } from "vitest";
-import { parseEnv } from "@/lib/env";
+import { parseDbEnv, parseEmailEnv } from "@/lib/env";
 
-const valid = {
-  DATABASE_URL: "postgres://wingate:pw@localhost:5432/wingate",
+const db = { DATABASE_URL: "postgres://wingate:pw@localhost:5432/wingate" };
+const email = {
   RESEND_API_KEY: "re_test",
   CONTACT_TO_EMAIL: "owner@example.com",
   CONTACT_FROM_EMAIL: "Wingate <noreply@example.com>",
 };
 
-describe("parseEnv", () => {
+describe("parseDbEnv", () => {
+  it("returns DATABASE_URL when it is set", () => {
+    expect(parseDbEnv(db)).toEqual(db);
+  });
+
+  it("ignores the email settings, so a bad one cannot block storing leads", () => {
+    expect(parseDbEnv({ ...db, CONTACT_TO_EMAIL: "Wingate <owner@example.com>" })).toEqual(db);
+  });
+
+  it("names DATABASE_URL when it is missing", () => {
+    expect(() => parseDbEnv({ DATABASE_URL: "" })).toThrow(/DATABASE_URL/);
+  });
+});
+
+describe("parseEmailEnv", () => {
   it("returns the parsed values when everything is set", () => {
-    expect(parseEnv(valid)).toEqual(valid);
+    expect(parseEmailEnv(email)).toEqual(email);
   });
 
   it("names every missing variable in the error", () => {
-    expect(() => parseEnv({ ...valid, RESEND_API_KEY: undefined, DATABASE_URL: "" })).toThrow(
-      /DATABASE_URL.*RESEND_API_KEY|RESEND_API_KEY.*DATABASE_URL/,
-    );
+    expect(() =>
+      parseEmailEnv({ ...email, RESEND_API_KEY: undefined, CONTACT_FROM_EMAIL: "" }),
+    ).toThrow(/RESEND_API_KEY.*CONTACT_FROM_EMAIL|CONTACT_FROM_EMAIL.*RESEND_API_KEY/);
   });
 
-  it("rejects a recipient that is not an email address", () => {
-    expect(() => parseEnv({ ...valid, CONTACT_TO_EMAIL: "not-an-email" })).toThrow(
-      /CONTACT_TO_EMAIL/,
-    );
+  it("rejects a recipient in display-name form", () => {
+    expect(() =>
+      parseEmailEnv({ ...email, CONTACT_TO_EMAIL: "Wingate <owner@example.com>" }),
+    ).toThrow(/CONTACT_TO_EMAIL/);
   });
 
   it("does not leak secret values into the error message", () => {
     let message = "";
     try {
-      parseEnv({ ...valid, CONTACT_TO_EMAIL: "re_secret_value" });
+      parseEmailEnv({ ...email, CONTACT_TO_EMAIL: "re_secret_value" });
     } catch (error) {
       message = (error as Error).message;
     }
