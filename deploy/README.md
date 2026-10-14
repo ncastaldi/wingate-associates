@@ -11,7 +11,7 @@ Notes for deploying the site. The deployable artefacts themselves (`Dockerfile`,
 
 ## One-time setup
 
-1. In the Cloudflare Zero Trust dashboard, create a remote-managed tunnel and copy its token (Networks, Tunnels).
+1. In the Cloudflare Zero Trust dashboard, create a remote-managed tunnel and copy its token (Networks, Tunnels). The token is the long string starting `eyJ` in the install command, not the tunnel ID (a UUID).
 2. Add a public hostname to the tunnel: `wingate.associates`, service `http://web:3000`. The `web` name resolves because `cloudflared` shares the `edge` network with it. Per the new domain runbook, `www` redirects to the apex.
 3. In Komodo, set the variables listed in `.env.example`, including `CLOUDFLARE_TUNNEL_TOKEN`.
 4. `NEXT_PUBLIC_PLAUSIBLE_SRC` is inlined at build time, so it must be available when the stack builds the image (compose passes it as a build arg). Changing it needs a rebuild, not just a restart.
