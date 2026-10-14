@@ -5,8 +5,9 @@ Notes for deploying the site. The deployable artefacts themselves (`Dockerfile`,
 ## How it ships
 
 1. CI builds and checks the image (`.github/workflows/ci.yml`).
-2. Komodo deploys `compose.yaml` to the target server and supplies secrets as Komodo variables.
-3. A Cloudflare Tunnel connector reaches the `web` service over the external `edge` Docker network. No ports are published to the host.
+2. Komodo deploys `compose.yaml` to the target server, building the `web` and `migrate` images, and supplies secrets as Komodo variables.
+3. On each deploy the `migrate` service applies pending database migrations (`drizzle/`) and exits; `web` starts only after it succeeds, so a fresh database gets its tables without a manual step.
+4. A Cloudflare Tunnel connector reaches the `web` service over the external `edge` Docker network. No ports are published to the host.
 
 ## One-time setup on the target host
 

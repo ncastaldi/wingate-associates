@@ -14,6 +14,16 @@ ARG NEXT_PUBLIC_PLAUSIBLE_SRC
 ENV NEXT_PUBLIC_PLAUSIBLE_SRC=$NEXT_PUBLIC_PLAUSIBLE_SRC
 RUN npm run build
 
+# One-shot job that applies drizzle migrations; compose runs it before `web`.
+# Kept out of the runtime image so drizzle-kit and the SQL files stay out of it.
+FROM node:24-alpine AS migrate
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY package.json drizzle.config.ts ./
+COPY drizzle ./drizzle
+COPY src/db/schema.ts ./src/db/schema.ts
+CMD ["npx", "drizzle-kit", "migrate"]
+
 FROM node:24-alpine AS run
 WORKDIR /app
 ENV NODE_ENV=production \

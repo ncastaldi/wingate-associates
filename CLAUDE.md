@@ -73,7 +73,7 @@ In production the `web` container and Postgres run from `compose.yaml`; the Clou
 
 - Repo scaffolded from template, foundation.md and CLAUDE.md written.
 - Next.js app skeleton: strict TypeScript, ESLint/Prettier, Vitest with one smoke test, a placeholder home page, a `leads` table schema.
-- Production `Dockerfile` and `compose.yaml` for Komodo. The image builds and serves HTTP 200 locally, and `docker compose config` validates.
+- Production `Dockerfile` and `compose.yaml` for Komodo, with a one-shot `migrate` service that applies drizzle migrations before `web` starts (checked end to end on a throwaway stack). The image builds and serves HTTP 200 locally, and `docker compose config` validates.
 - CI (`ci.yml`) for lint, typecheck, test, build and image build; Dependabot for npm and Docker.
 - First migration for the `leads` table (`drizzle/0000_low_fenris.sql`), applied and checked against a throwaway Postgres 17.
 - Lead-capture server action (`src/app/contact/actions.ts`): zod validation, Postgres insert, Resend notification. Env is validated lazily in `src/lib/env.ts`. The insert path was checked against a throwaway Postgres 17; the live Resend call has not been exercised yet.

@@ -20,7 +20,23 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     networks: [edge, internal]
+
+  # Applies migrations on each deploy, then exits. `web` waits for it to succeed.
+  migrate:
+    image: ${MIGRATE_IMAGE:-wingate-associates-migrate:latest}
+    build:
+      context: .
+      target: migrate
+    restart: "no"
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [internal]
 
   db:
     image: postgres:17-alpine
