@@ -93,6 +93,8 @@ Every piece of public copy (pages, meta descriptions, form messages, emails to v
   - The root layout sets `metadataBase`. Each page builds its title, description, canonical URL, Open Graph and Twitter tags with `pageMetadata()` from `src/lib/page-metadata.ts`. Next merges metadata shallowly, so a page that set `openGraph` on its own would lose the share image `src/app/opengraph-image.png`.
 - First deploy (#10): live at `https://wingate.associates` since 2026-10-14 through Komodo and the Cloudflare Tunnel (`wingate.associates` and `www` routes). The smoke test in `deploy/README.md` passed, including a stored lead and a delivered Resend email. Credentials were rotated after the first deploy logs exposed them. `deploy/README.md` lists the traps found on the way.
 - Design system (Claude Design, 2026-10-14): `design/system/` holds the system as delivered, and `design/README.md` says how the site uses it. `src/app/globals.css` is its single-file build: an "operations console" look with a faint grid, navy and teal from the logo, designed light and dark schemes, Instrument Sans and IBM Plex Mono self-hosted from `public/fonts/` (SIL OFL), and status dots used only for real states. Styles hook on elements, ARIA roles and a few data attributes (`data-hero`, `data-button`, `data-list`, `data-stat`, `data-status`, `data-illustration`), never classes. The Home hero diagram (`src/components/systems-diff.tsx`) shows HR, AD and Entra ID with one flagged mismatch. The header nav marks the current page (`src/components/site-nav.tsx`).
+- Every stored lead sends two emails through Resend, independently and best effort (#48): the owner notification, and a fixed acknowledgement to the visitor (`sendLeadAcknowledgement` in `src/lib/notify-lead.ts`) that echoes nothing they typed, so the form cannot be used to mail arbitrary text. Replies to it reach `CONTACT_TO_EMAIL`.
+- Set at Cloudflare, not in the app (2026-10-14): `www.wingate.associates` redirects to the apex with a 301, and the edge adds HSTS, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy` and `Permissions-Policy` (no CSP).
 - Leads are stored even when the email settings are wrong: `src/lib/env.ts` validates `DATABASE_URL` (`getDbEnv`) separately from the Resend variables (`getEmailEnv`) (#42). `.env.example` pastes into Komodo as-is (#43).
 
 ### In progress
@@ -101,10 +103,8 @@ Every piece of public copy (pages, meta descriptions, form messages, emails to v
 
 - Portfolio and case studies: deferred past v1.
 - Self-hosted booking in the compose stack: evaluate Cal.diy or another self-hostable scheduler first (ADR-006 amendment, #9)
-- `www` to apex redirect (a Cloudflare Redirect Rule); `www` currently serves the site directly
 - Local development: the README quick start runs `docker compose up -d db`, but `db` publishes no port, so `localhost:5432` cannot reach it. Needs a dev-only compose override or another local Postgres
-- Edge security headers from the domain runbook (without its CSP), and Playwright in CI
-- Contact form acknowledgement email to the visitor (#48). The site shows no direct contact details by design, so the form is the only way in.
+- Playwright in CI
 - Link Nexus from the site once the owner has tidied the repo and made it public. Until then it is described without a link.
 - Turn off Cloudflare RUM (Web Analytics) on the `wingate.associates` zone. Cloudflare injects its beacon into every page, which conflicts with constraint 5. It is not listed under account-level Web Analytics, so look in the zone's Speed settings.
 
