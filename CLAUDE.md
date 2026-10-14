@@ -109,4 +109,4 @@ In production the `web` container and Postgres run from `compose.yaml`; the Clou
 
 ---
 
-*Last updated: 2026-10-13 | Session: Plausible script wiring*
+*Last updated: 2026-10-13 | Session: Cal.com ADR amendment and first Playwright test*
