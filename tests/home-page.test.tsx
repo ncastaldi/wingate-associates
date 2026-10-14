@@ -3,15 +3,32 @@ import { describe, expect, it } from "vitest";
 import HomePage from "@/app/page";
 
 describe("HomePage", () => {
-  it("renders the practice name as the main heading", () => {
+  it("leads with the practice's one-line pitch", () => {
     render(<HomePage />);
     expect(
-      screen.getByRole("heading", { level: 1, name: "Wingate Associates" }),
+      screen.getByRole("heading", {
+        level: 1,
+        name: "Most IT problems aren’t technology problems.",
+      }),
     ).toBeInTheDocument();
   });
 
-  it("links to the contact page", () => {
+  it("shows recent work and no placeholder notice", () => {
     render(<HomePage />);
-    expect(screen.getByRole("link", { name: "Get in touch" })).toHaveAttribute("href", "/contact");
+    expect(screen.getByRole("heading", { level: 2, name: "Recent work" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Jobsquatch" })).toHaveAttribute(
+      "href",
+      "https://jobsquatch.us",
+    );
+    expect(screen.queryByRole("note")).not.toBeInTheDocument();
+  });
+
+  it("links to services and the contact page", () => {
+    render(<HomePage />);
+    expect(screen.getByRole("link", { name: "See services" })).toHaveAttribute("href", "/services");
+    expect(screen.getByRole("link", { name: "tell me what’s broken" })).toHaveAttribute(
+      "href",
+      "/contact",
+    );
   });
 });

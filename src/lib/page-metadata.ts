@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 
 export const SITE_NAME = "Wingate Associates";
 
-// Placeholder like the page copy: revise with the real Home copy.
 export const HOME_DESCRIPTION =
-  "Independent consulting practice. Services, engagement models and how to get in touch.";
+  "Most IT problems aren’t technology problems. I find the process and data problems underneath and build the fix. IT operations consulting in Atlanta and remote.";
 
 const SHARE_IMAGE = {
   url: "/opengraph-image.png",

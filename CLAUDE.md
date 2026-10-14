@@ -84,13 +84,13 @@ Every piece of public copy (pages, meta descriptions, form messages, emails to v
 - Contact page (`src/app/contact/page.tsx`) with a `ContactForm` client component (`useActionState`, field errors, success state) and a honeypot field (`HONEYPOT_FIELD` in `src/lib/lead-schema.ts`): a filled honeypot returns `ok: true` without storing or emailing. Submissions are rate limited in memory (#22): 5 per client IP (Cloudflare's `CF-Connecting-IP`) and 30 overall per hour, in `src/lib/lead-rate-limit.ts`. Only submissions that would store a lead count; a restart resets the counts. The home page links to `/contact`. Tests now run `cleanup` after each test (`tests/setup.ts`).
 - First Playwright test (`tests/e2e/contact-form.spec.ts`): field errors and honeypot. The happy path needs Postgres and Resend, so it is not covered yet.
 - Plausible script wiring (`src/components/plausible-script.tsx`, rendered in the root layout). It reads only `NEXT_PUBLIC_PLAUSIBLE_SRC` and renders nothing when unset. ADR-005 is amended to drop `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`.
-- v1 pages (#4): real Home page, combined Services page (`src/app/services/page.tsx`), and a shared header and footer in the root layout (`src/components/site-header.tsx`, `site-footer.tsx`). All copy is placeholder text flagged by `PlaceholderNotice`; the owner must replace it before launch. The pages are unstyled, like the rest of the site.
+- v1 pages (#4): real Home page, combined Services page (`src/app/services/page.tsx`), and a shared header and footer in the root layout (`src/components/site-header.tsx`, `site-footer.tsx`). The owner's real copy replaced the placeholders (#4): Home leads with his pitch and a Recent work section (Nexus, Jobsquatch); Services covers three services, three ways to engage and a short About. Prices are not published: every engagement is quoted after a free 30-minute call. The footer links LinkedIn, and the site shows no email or phone by design, so the contact form is the only way in.
 - `migrate` and `web` use `pull_policy: build`, so Komodo's Compose Pull stage skips them and `up` builds them on the host (#35).
 - Launch basics on `https://wingate.associates` (#36 to #39). The origin is `SITE_URL` in `src/lib/site.ts`.
   - `src/app/robots.ts` allows all crawlers and names the sitemap.
   - `src/app/sitemap.ts` lists `/`, `/services` and `/contact`. Add new public pages to it by hand.
   - The icons (`src/app/icon.png`, `favicon.ico`, `apple-icon.png`), the share image (`src/app/opengraph-image.png`) and the header mark (`public/logo-mark.png`) come from the logo in `brand/` (see `brand/README.md`).
-  - The root layout sets `metadataBase`. Each page builds its title, description, canonical URL, Open Graph and Twitter tags with `pageMetadata()` from `src/lib/page-metadata.ts`. Next merges metadata shallowly, so a page that set `openGraph` on its own would lose the share image `src/app/opengraph-image.png`. The descriptions are placeholders, like the page copy.
+  - The root layout sets `metadataBase`. Each page builds its title, description, canonical URL, Open Graph and Twitter tags with `pageMetadata()` from `src/lib/page-metadata.ts`. Next merges metadata shallowly, so a page that set `openGraph` on its own would lose the share image `src/app/opengraph-image.png`.
 - First deploy (#10): live at `https://wingate.associates` since 2026-10-14 through Komodo and the Cloudflare Tunnel (`wingate.associates` and `www` routes). The smoke test in `deploy/README.md` passed, including a stored lead and a delivered Resend email. Credentials were rotated after the first deploy logs exposed them. `deploy/README.md` lists the traps found on the way.
 - Styling (#46 and the logo PR): one global stylesheet, `src/app/globals.css`, with system fonts only, navy and teal from the logo, light and dark schemes, and a single centred column. It targets elements and ARIA roles, so markup stays plain. The logo (`brand/wingate-logo.png`) supplies the header mark and all icons; the wordmark font is not self-hosted yet, so headings use a system serif.
 - Leads are stored even when the email settings are wrong: `src/lib/env.ts` validates `DATABASE_URL` (`getDbEnv`) separately from the Resend variables (`getEmailEnv`) (#42). `.env.example` pastes into Komodo as-is (#43).
@@ -99,7 +99,6 @@ Every piece of public copy (pages, meta descriptions, form messages, emails to v
 
 ### Not started
 
-- Real copy for Home and Services (replace the placeholders), then #4 can close
 - Portfolio and case studies: deferred past v1.
 - Self-hosted booking in the compose stack: evaluate Cal.diy or another self-hostable scheduler first (ADR-006 amendment, #9)
 - `www` to apex redirect (a Cloudflare Redirect Rule); `www` currently serves the site directly
