@@ -6,7 +6,7 @@ import { getDb } from "@/db";
 import { leads } from "@/db/schema";
 import { HONEYPOT_FIELD, leadSchema } from "@/lib/lead-schema";
 import { checkLeadRateLimit, clientKeyFrom } from "@/lib/lead-rate-limit";
-import { sendLeadNotification } from "@/lib/notify-lead";
+import { sendLeadAcknowledgement, sendLeadNotification } from "@/lib/notify-lead";
 
 export type SubmitLeadResult =
   | { ok: true }
@@ -42,11 +42,18 @@ export async function submitLead(formData: FormData): Promise<SubmitLeadResult> 
     return { ok: false, formError: "Something went wrong. Please try again." };
   }
 
-  // The lead is already stored, so a failed notification must not fail the submission.
-  try {
-    await sendLeadNotification(parsed.data);
-  } catch (error) {
-    console.error("Lead notification failed", error);
+  // The lead is already stored, so a failed email must not fail the submission. The owner
+  // notification and the visitor's acknowledgement are independent: one failing does not
+  // stop the other.
+  const [notification, acknowledgement] = await Promise.allSettled([
+    sendLeadNotification(parsed.data),
+    sendLeadAcknowledgement(parsed.data),
+  ]);
+  if (notification.status === "rejected") {
+    console.error("Lead notification failed", notification.reason);
+  }
+  if (acknowledgement.status === "rejected") {
+    console.error("Lead acknowledgement failed", acknowledgement.reason);
   }
 
   return { ok: true };

@@ -16,7 +16,8 @@ Notes for deploying the site. The deployable artefacts themselves (`Dockerfile`,
 3. Paste `.env.example` into the Komodo stack's Environment and fill in the blanks. Each line is `NAME=value`; check the name is not pasted twice (`NAME=NAME=value`).
 4. In the Komodo stack settings, add `migrate` to Ignore Services. It runs once and exits, and Komodo otherwise reports the stack as unhealthy.
 5. `NEXT_PUBLIC_PLAUSIBLE_SRC` is inlined at build time, so it must be available when the stack builds the image (compose passes it as a build arg). Changing it needs a rebuild, not just a restart.
-6. Deploy the stack. Nothing needs creating on the host first: `compose.yaml` defines the networks and the volume.
+6. Email lives in Resend for both directions. The domain is verified for sending (DKIM `resend._domainkey`, plus `send` and `rsend` CNAMEs) and for receiving (root MX `inbound-smtp.us-east-1.amazonaws.com`, priority 5), and `hello@wingate.associates` is a Resend inbox. `_dmarc` is `v=DMARC1; p=none; rua=mailto:hello@wingate.associates`. Cloudflare Email Routing must stay off: it adds its own locked MX records, and a domain can deliver to only one provider.
+7. Deploy the stack. Nothing needs creating on the host first: `compose.yaml` defines the networks and the volume.
 
 ## Things that bite
 
@@ -27,6 +28,7 @@ Notes for deploying the site. The deployable artefacts themselves (`Dockerfile`,
   2. `sudo docker ps -a --filter name=wingate-associates` lists nothing.
   3. `sudo docker volume rm wingate-associates_db-data`. This deletes every stored lead.
   4. Deploy. The log shows `Volume wingate-associates_db-data Creating`.
+- **No MX record means notifications vanish, then stay blocked.** Until 2026-10-14 the domain had no MX, so mail to `hello@` sat as `delivery_delayed` and then bounced. Resend puts a bounced address on its suppression list and refuses every later send to it (status `suppressed`). After fixing MX, remove the address from Resend's suppression list (dashboard, or the Resend connector), then send a test.
 - **A bad email setting does not lose leads.** The lead is stored first; the web log shows `Lead notification failed` with Resend's reason.
 
 ## First-deploy smoke test

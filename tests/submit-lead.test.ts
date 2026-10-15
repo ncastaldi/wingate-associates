@@ -3,11 +3,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const values = vi.fn();
 const insert = vi.fn(() => ({ values }));
 const sendLeadNotification = vi.fn();
+const sendLeadAcknowledgement = vi.fn();
 const checkLeadRateLimit = vi.fn();
 const requestHeaders = new Headers({ "cf-connecting-ip": "203.0.113.7" });
 
 vi.mock("@/db", () => ({ getDb: () => ({ insert }) }));
-vi.mock("@/lib/notify-lead", () => ({ sendLeadNotification }));
+vi.mock("@/lib/notify-lead", () => ({ sendLeadNotification, sendLeadAcknowledgement }));
 vi.mock("next/headers", () => ({ headers: async () => requestHeaders }));
 vi.mock("@/lib/lead-rate-limit", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/lib/lead-rate-limit")>()),
@@ -30,6 +31,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   values.mockResolvedValue(undefined);
   sendLeadNotification.mockResolvedValue(undefined);
+  sendLeadAcknowledgement.mockResolvedValue(undefined);
   checkLeadRateLimit.mockReturnValue("ok");
   vi.spyOn(console, "error").mockImplementation(() => {});
   vi.spyOn(console, "warn").mockImplementation(() => {});
@@ -41,6 +43,7 @@ describe("submitLead", () => {
     expect(insert).toHaveBeenCalledWith(leads);
     expect(values).toHaveBeenCalledWith(stored);
     expect(sendLeadNotification).toHaveBeenCalledWith(stored);
+    expect(sendLeadAcknowledgement).toHaveBeenCalledWith(stored);
   });
 
   it("pretends to succeed but stores and sends nothing when the honeypot is filled", async () => {
@@ -49,6 +52,7 @@ describe("submitLead", () => {
     });
     expect(insert).not.toHaveBeenCalled();
     expect(sendLeadNotification).not.toHaveBeenCalled();
+    expect(sendLeadAcknowledgement).not.toHaveBeenCalled();
   });
 
   it("accepts an empty honeypot as a normal submission", async () => {
@@ -75,6 +79,7 @@ describe("submitLead", () => {
     expect(result).toEqual({ ok: false, formError: expect.any(String) });
     expect(JSON.stringify(result)).not.toContain("connection refused");
     expect(sendLeadNotification).not.toHaveBeenCalled();
+    expect(sendLeadAcknowledgement).not.toHaveBeenCalled();
   });
 
   it("counts the submission against the visitor's Cloudflare-reported address", async () => {
@@ -90,6 +95,7 @@ describe("submitLead", () => {
       expect(result).toEqual({ ok: false, formError: expect.stringContaining("try again") });
       expect(insert).not.toHaveBeenCalled();
       expect(sendLeadNotification).not.toHaveBeenCalled();
+      expect(sendLeadAcknowledgement).not.toHaveBeenCalled();
     },
   );
 
@@ -103,5 +109,17 @@ describe("submitLead", () => {
     sendLeadNotification.mockRejectedValue(new Error("resend down"));
     await expect(submitLead(form(valid))).resolves.toEqual({ ok: true });
     expect(values).toHaveBeenCalledWith(stored);
+  });
+
+  it("still acknowledges the visitor when the owner notification fails", async () => {
+    sendLeadNotification.mockRejectedValue(new Error("resend down"));
+    await expect(submitLead(form(valid))).resolves.toEqual({ ok: true });
+    expect(sendLeadAcknowledgement).toHaveBeenCalledWith(stored);
+  });
+
+  it("still succeeds when the acknowledgement fails", async () => {
+    sendLeadAcknowledgement.mockRejectedValue(new Error("bad recipient"));
+    await expect(submitLead(form(valid))).resolves.toEqual({ ok: true });
+    expect(sendLeadNotification).toHaveBeenCalledWith(stored);
   });
 });

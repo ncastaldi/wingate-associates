@@ -1,4 +1,9 @@
 import { Resend } from "resend";
+import {
+  ACKNOWLEDGEMENT_HTML,
+  ACKNOWLEDGEMENT_SUBJECT,
+  ACKNOWLEDGEMENT_TEXT,
+} from "./acknowledgement-email";
 import { getEmailEnv } from "./env";
 
 export type Lead = { name: string; email: string; message: string };
@@ -45,5 +50,23 @@ export async function sendLeadNotification(
   });
   if (error) {
     throw new Error(`Lead notification failed: ${error.message}`);
+  }
+}
+
+export async function sendLeadAcknowledgement(
+  lead: Lead,
+  send: EmailSender = resendSender(),
+): Promise<void> {
+  const env = getEmailEnv();
+  const { error } = await send({
+    from: env.CONTACT_FROM_EMAIL,
+    to: lead.email,
+    replyTo: env.CONTACT_TO_EMAIL,
+    subject: ACKNOWLEDGEMENT_SUBJECT,
+    text: ACKNOWLEDGEMENT_TEXT,
+    html: ACKNOWLEDGEMENT_HTML,
+  });
+  if (error) {
+    throw new Error(`Lead acknowledgement failed: ${error.message}`);
   }
 }
