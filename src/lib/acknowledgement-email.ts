@@ -4,7 +4,7 @@ import { SITE_URL } from "./site";
 // the visitor typed is echoed back, so the form cannot be used to mail arbitrary text to
 // strangers. Copy follows docs/voice/README.md.
 
-export const ACKNOWLEDGEMENT_SUBJECT = "Got your message";
+export const ACKNOWLEDGEMENT_SUBJECT = "Thank you for reaching out!";
 
 // One string per paragraph. The HTML and plain-text versions are both built from these, so
 // the wording only lives here.
@@ -14,12 +14,12 @@ export const ACKNOWLEDGEMENT_PARAGRAPHS = [
   "Two things help me give you a useful answer faster: roughly how many people you support, and who runs IT today (an MSP, someone in-house, or nobody in particular). Reply here with either. No need to dress it up.",
 ];
 
-const SIGNATURE = ["Nathan Castaldi", "Wingate Associates"];
-const SITE_LABEL = new URL(SITE_URL).host;
+const SIGNATURE_NAME = "Nathan Castaldi";
+const COMPANY = "Wingate Associates";
 
 export const ACKNOWLEDGEMENT_TEXT = [
   ...ACKNOWLEDGEMENT_PARAGRAPHS,
-  [...SIGNATURE, SITE_URL].join("\n"),
+  [SIGNATURE_NAME, SITE_URL].join("\n"),
 ].join("\n\n");
 
 // Colours and type from the design system (design/system/tokens). Email clients ignore
@@ -53,8 +53,8 @@ export const ACKNOWLEDGEMENT_HTML = `<!doctype html>
 ${ACKNOWLEDGEMENT_PARAGRAPHS.map(paragraph).join("\n")}
 </td></tr>
 <tr><td style="padding:8px 28px 28px;border-top:1px solid ${BORDER};">
-<p style="margin:16px 0 0;font-size:15px;line-height:1.5;color:${NAVY};font-weight:600;">${SIGNATURE[0]}</p>
-<p style="margin:0;font-size:14px;line-height:1.5;color:${MUTED};">${SIGNATURE[1]} · <a href="${SITE_URL}" style="color:${LINK};">${SITE_LABEL}</a></p>
+<p style="margin:16px 0 0;font-size:15px;line-height:1.5;color:${NAVY};font-weight:600;">${SIGNATURE_NAME}</p>
+<p style="margin:0;font-size:14px;line-height:1.5;color:${MUTED};"><a href="${SITE_URL}" style="color:${LINK};">${COMPANY}</a></p>
 </td></tr>
 </table>
 </td></tr>

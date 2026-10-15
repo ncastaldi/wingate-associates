@@ -67,7 +67,7 @@ describe("sendLeadAcknowledgement", () => {
       from: "Wingate <noreply@example.com>",
       to: "ada@example.com",
       replyTo: "owner@example.com",
-      subject: "Got your message",
+      subject: "Thank you for reaching out!",
       text: ACKNOWLEDGEMENT_TEXT,
       html: ACKNOWLEDGEMENT_HTML,
     });
