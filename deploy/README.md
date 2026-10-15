@@ -17,7 +17,14 @@ Notes for deploying the site. The deployable artefacts themselves (`Dockerfile`,
 4. In the Komodo stack settings, add `migrate` to Ignore Services. It runs once and exits, and Komodo otherwise reports the stack as unhealthy.
 5. `NEXT_PUBLIC_PLAUSIBLE_SRC` is inlined at build time, so it must be available when the stack builds the image (compose passes it as a build arg). Changing it needs a rebuild, not just a restart.
 6. Email lives in Resend for both directions. The domain is verified for sending (DKIM `resend._domainkey`, plus `send` and `rsend` CNAMEs) and for receiving (root MX `inbound-smtp.us-east-1.amazonaws.com`, priority 5), and `hello@wingate.associates` is a Resend inbox. `_dmarc` is `v=DMARC1; p=none; rua=mailto:hello@wingate.associates`. Cloudflare Email Routing must stay off: it adds its own locked MX records, and a domain can deliver to only one provider.
-7. Deploy the stack. Nothing needs creating on the host first: `compose.yaml` defines the networks and the volume.
+7. Security headers are a Cloudflare Transform Rule (Rules, Transform Rules, Modify Response Header, "Security headers"), not app code: `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy: camera=(), microphone=(), geolocation=()`, and this `Content-Security-Policy`:
+
+   ```
+   default-src 'self'; script-src 'self' 'unsafe-inline' https://plausible.castaldifamily.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://plausible.castaldifamily.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'
+   ```
+
+   It allows the self-hosted fonts and the Plausible script and event endpoint, and nothing else from outside. Resend is called from the server only, so it needs no entry. Next.js and the Plausible init snippet need `'unsafe-inline'` for scripts. If the Plausible host changes, update both entries.
+8. Deploy the stack. Nothing needs creating on the host first: `compose.yaml` defines the networks and the volume.
 
 ## Things that bite
 
@@ -29,6 +36,7 @@ Notes for deploying the site. The deployable artefacts themselves (`Dockerfile`,
   3. `sudo docker volume rm wingate-associates_db-data`. This deletes every stored lead.
   4. Deploy. The log shows `Volume wingate-associates_db-data Creating`.
 - **No MX record means notifications vanish, then stay blocked.** Until 2026-10-14 the domain had no MX, so mail to `hello@` sat as `delivery_delayed` and then bounced. Resend puts a bounced address on its suppression list and refuses every later send to it (status `suppressed`). After fixing MX, remove the address from Resend's suppression list (dashboard, or the Resend connector), then send a test.
+- **The runbook's sample CSP breaks this site.** `docs/SOPs/new-domain-setup-runbook.md` has a value for static pages on Google Fonts. Pasted here on 2026-10-15, it blocked the self-hosted fonts and Plausible on every page with no visible error beyond fallback fonts. Use the value in setup step 7, and after any change load the site with the browser console open and look for `Refused to load`.
 - **A bad email setting does not lose leads.** The lead is stored first; the web log shows `Lead notification failed` with Resend's reason.
 
 ## First-deploy smoke test

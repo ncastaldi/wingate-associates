@@ -131,7 +131,7 @@ Go to Rules → Transform Rules → Modify Response Header → Create rule. Name
 | Permissions-Policy | camera=(), microphone=(), geolocation=() |
 | Content-Security-Policy | See note below |
 
-Content-Security-Policy value for a static landing page with Google Fonts and an inline fetch() call to Resend:
+Content-Security-Policy value for a static landing page with Google Fonts and an inline fetch() call to Resend. It is a sample for that kind of page only. Do not paste it onto a site that self-hosts fonts or loads analytics: it blocks both. wingate.associates uses its own value, in that repo's `deploy/README.md`.
 
 | default-src 'self'; |
 | :---- |
