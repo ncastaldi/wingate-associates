@@ -6,6 +6,7 @@ describe("sitemap", () => {
     expect(sitemap().map((entry) => entry.url)).toEqual([
       "https://wingate.associates/",
       "https://wingate.associates/services",
+      "https://wingate.associates/about",
       "https://wingate.associates/contact",
     ]);
   });

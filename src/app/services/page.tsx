@@ -57,7 +57,9 @@ export default function ServicesPage() {
                 <data value="5.05">5.05</data>
                 <data value="4.65">4.65</data>
               </p>
-              <figcaption>At the same company I took MTTR from 5.05 days to 4.65.</figcaption>
+              <figcaption>
+                At the same company I took Mean Time to Resolve from 5.05 days to 4.65.
+              </figcaption>
             </figure>
           </li>
         </ul>
@@ -82,26 +84,6 @@ export default function ServicesPage() {
             </p>
           </li>
         </ul>
-      </section>
-
-      <section aria-labelledby="about-heading">
-        <h2 id="about-heading">About me</h2>
-        <p>
-          I’m Nathan Castaldi. I’ve spent 15 years in IT operations. Most recently I led a desk-side
-          support team of seven across Atlanta and Chicago for a fleet-leasing company.
-        </p>
-        <p>
-          Before that I ran IT operations for a global advertising group, first in London and then
-          in Atlanta. I was the layer between IBM’s managed service and 12 local business units.
-        </p>
-        <p>
-          I’m based in Atlanta. I work on-site around the metro and remotely anywhere, and I’ll
-          travel for the right project.
-        </p>
-        <p>
-          I take on consulting projects and contract roles. I’m open to the right full-time role
-          too.
-        </p>
         <p>
           <Link data-button="primary" href="/contact">
             Tell me what’s broken

@@ -9,7 +9,8 @@ All public copy on the site (pages, metadata descriptions, form messages, emails
 - **Lean paragraphs.** No more than three sentences, then stop.
 - **No em dashes.** Use few commas and rare parentheses. Prefer a full stop.
 - **Plain words.** Pick the short Anglo-Saxon word over the Latinate one. Name tools and vendors specifically (Entra ID, Workday, BMC Helix), not categories ("identity platforms").
-- **Confidence through specifics.** Let numbers and concrete detail carry the claim (24 roles down to 7, MTTR from 5.05 to 4.65 days). Don't assert greatness. Hedge honestly ("I think") where a claim isn't certain.
+- **Confidence through specifics.** Let numbers and concrete detail carry the claim (24 roles down to 7, Mean Time to Resolve from 5.05 to 4.65 days). Don't assert greatness. Hedge honestly ("I think") where a claim isn't certain.
+- **Write for a smart reader outside IT.** Spell out acronyms and explain jargon the first time they appear on a page. Metric names keep their capitals with lowercase short words ("Mean Time to Resolve"). Plain terms stay lowercase ("managed service provider (MSP)"). Product names (Active Directory, Entra ID) stay as they are, but say what they do the first time.
 - **Tone.** Candid, matter-of-fact, a little dry about organisational dysfunction. Never cynical, self-pitying or performatively upbeat.
 
 ## Never

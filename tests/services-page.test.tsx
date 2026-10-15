@@ -12,6 +12,11 @@ describe("ServicesPage", () => {
     ).toBeInTheDocument();
   });
 
+  it("leaves the about section to the About page", () => {
+    render(<ServicesPage />);
+    expect(screen.queryByRole("heading", { name: "About me" })).not.toBeInTheDocument();
+  });
+
   it("has no placeholder notice and links to the contact page", () => {
     render(<ServicesPage />);
     expect(screen.queryByText(/Placeholder copy/)).not.toBeInTheDocument();
