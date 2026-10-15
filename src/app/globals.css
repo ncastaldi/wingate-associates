@@ -290,6 +290,30 @@ main > section {
 main > section:last-child {
   padding-bottom: var(--section-gap);
 }
+
+/* Two columns from 64em (form left, booking right); stacked below that */
+main > [data-split] {
+  display: grid;
+  gap: var(--space-7);
+  padding: var(--space-6) max(var(--gutter), calc((100% - var(--page-max)) / 2)) var(--section-gap);
+}
+@media (min-width: 64em) {
+  main > [data-split] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+[data-split] > section > h2 {
+  margin-top: 0;
+}
+[data-split] iframe {
+  display: block;
+  width: 100%;
+  height: 42rem;
+  border: var(--rule) solid var(--border);
+  border-radius: var(--radius, 0.5rem);
+  background: transparent;
+}
 main > section > :is(ul, figure) + :is(p, [role="note"]) {
   margin-top: var(--space-6);
 }

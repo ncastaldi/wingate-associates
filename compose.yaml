@@ -2,8 +2,7 @@
 # connector below dials out to Cloudflare and reaches `web` over the `edge`
 # network, so nothing is exposed directly (CLAUDE.md constraint 2).
 #
-# Secrets are Komodo variables and never live in this repo. Cal.com is a later
-# addition (ADR-006).
+# Secrets are Komodo variables and never live in this repo.
 services:
   web:
     image: ${WEB_IMAGE:-wingate-associates:latest}
@@ -20,6 +19,8 @@ services:
       RESEND_API_KEY: ${RESEND_API_KEY}
       CONTACT_TO_EMAIL: ${CONTACT_TO_EMAIL}
       CONTACT_FROM_EMAIL: ${CONTACT_FROM_EMAIL}
+      # Public booking page embedded on /contact. Empty until Cal.diy is set up.
+      BOOKING_URL: ${BOOKING_URL:-}
     depends_on:
       db:
         condition: service_healthy
@@ -40,6 +41,66 @@ services:
     depends_on:
       - web
     networks: [edge]
+
+  # Self-hosted booking (ADR-006): Cal.diy, the open-source edition. It runs the
+  # official image pinned to a release, on the same Postgres server but with its
+  # own database and role. Public hostname: https://${CAL_HOST} -> http://cal:3000
+  # in the Cloudflare dashboard. The public URL is applied at start-up (the image
+  # rewrites its built-in placeholder), so no image build is needed.
+  cal:
+    image: calcom/cal.diy:${CAL_VERSION:-v6.2.0}
+    restart: unless-stopped
+    environment:
+      DATABASE_HOST: db:5432
+      DATABASE_URL: postgresql://cal:${CAL_DB_PASSWORD:?set CAL_DB_PASSWORD}@db:5432/cal
+      DATABASE_DIRECT_URL: postgresql://cal:${CAL_DB_PASSWORD}@db:5432/cal
+      NEXT_PUBLIC_WEBAPP_URL: https://${CAL_HOST:?set CAL_HOST}
+      NEXTAUTH_URL: https://${CAL_HOST}
+      ALLOWED_HOSTNAMES: '"${CAL_HOST}"'
+      NEXTAUTH_SECRET: ${CAL_NEXTAUTH_SECRET:?set CAL_NEXTAUTH_SECRET}
+      CALENDSO_ENCRYPTION_KEY: ${CAL_ENCRYPTION_KEY:?set CAL_ENCRYPTION_KEY}
+      # No usage reporting (CLAUDE.md constraints 4 and 5) and no public sign-up.
+      CALCOM_TELEMETRY_DISABLED: "1"
+      NEXT_PUBLIC_DISABLE_SIGNUP: "true"
+      # Booking emails go out through Resend's SMTP relay (ADR-003).
+      EMAIL_FROM: ${CAL_EMAIL_FROM:-notifications@wingate.associates}
+      EMAIL_FROM_NAME: Wingate Associates
+      EMAIL_SERVER_HOST: smtp.resend.com
+      EMAIL_SERVER_PORT: "587"
+      EMAIL_SERVER_USER: resend
+      EMAIL_SERVER_PASSWORD: ${RESEND_API_KEY}
+    depends_on:
+      db:
+        condition: service_healthy
+      cal-db-init:
+        condition: service_completed_successfully
+    networks: [edge, internal]
+
+  # Creates Cal.diy's role and database on the shared Postgres, then exits. Safe
+  # to run on every deploy. A new `db` volume only creates POSTGRES_DB, so this
+  # is what gives Cal.diy its own database on an existing one.
+  cal-db-init:
+    image: postgres:17-alpine
+    restart: "no"
+    environment:
+      PGHOST: db
+      PGUSER: ${POSTGRES_USER}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: ${POSTGRES_DB}
+      CAL_DB_PASSWORD: ${CAL_DB_PASSWORD}
+    command:
+      - sh
+      - -c
+      - |
+        psql -v ON_ERROR_STOP=1 -v pw="$$CAL_DB_PASSWORD" <<'SQL'
+        SELECT 'CREATE ROLE cal LOGIN' WHERE NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'cal') \gexec
+        SELECT format('ALTER ROLE cal PASSWORD %L', :'pw') \gexec
+        SELECT 'CREATE DATABASE cal OWNER cal' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'cal') \gexec
+        SQL
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [internal]
 
   # Applies migrations on each deploy, then exits. `web` waits for it to succeed.
   migrate:
@@ -76,6 +137,6 @@ volumes:
   db-data:
 
 networks:
-  # `web` and `cloudflared` only.
+  # `web`, `cal` and `cloudflared` only.
   edge:
   internal:

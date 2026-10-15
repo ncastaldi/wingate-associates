@@ -18,7 +18,7 @@ The audience is prospective consulting clients, and, for the portfolio, technica
 - **Validation:** zod
 - **Email:** Resend (the only approved hosted service)
 - **Analytics:** Plausible (script tag, env-configured)
-- **Booking (planned, on hold):** self-hosted scheduler, to be chosen; Cal.com closed its source in April 2026 (ADR-006 amendment)
+- **Booking:** self-hosted Cal.diy (the open-source Cal.com edition), official image on Docker Hub, shown beside the contact form (ADR-006 amendment). Not yet deployed.
 - **Tests:** Vitest + Testing Library; Playwright for end-to-end
 - **Lint/format:** ESLint (Next flat config), Prettier, `tsc --noEmit`
 - **Deployment:** Docker (multi-stage image), `compose.yaml` deployed by Komodo, exposed via a Cloudflare Tunnel
@@ -97,6 +97,8 @@ Every piece of public copy (pages, meta descriptions, form messages, emails to v
 - Set at Cloudflare, not in the app (2026-10-14): `www.wingate.associates` redirects to the apex with a 301, and the edge adds HSTS, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy` and `Permissions-Policy` (no CSP).
 - Leads are stored even when the email settings are wrong: `src/lib/env.ts` validates `DATABASE_URL` (`getDbEnv`) separately from the Resend variables (`getEmailEnv`) (#42). `.env.example` pastes into Komodo as-is (#43).
 
+- Booking with Cal.diy, written but not deployed (2026-10-15, ADR-006 amendment). `compose.yaml` has a `cal` service (pinned `calcom/cal.diy` image, own `cal` role and database on the shared Postgres, telemetry and sign-up off, Resend SMTP) and a one-shot `cal-db-init` that creates the role and database (the SQL was run twice against a local Postgres 16 and is idempotent). The contact page is now two columns from 64em: the form on the left and `BookingPanel` (`src/components/booking-panel.tsx`) on the right. The panel embeds the booking page when `BOOKING_URL` is set (`getBookingUrl` in `src/lib/booking.ts`, https only) and shows a short note when it is not. The page calls `connection()` so the variable is read per request. Setup steps and the Cloudflare `X-Frame-Options` exception are in `deploy/README.md`.
+
 ### In progress
 
 - First case study (`/work/...`): the role cleanup (24 to 7) story, anonymised, in the owner's voice. Needs the owner's answers on the situation, how the problem was found, the steps, results beyond the number, and how much context to give. Next session's focus.
@@ -105,7 +107,7 @@ Every piece of public copy (pages, meta descriptions, form messages, emails to v
 ### Not started
 
 - Portfolio and case studies: deferred past v1.
-- Self-hosted booking in the compose stack: evaluate Cal.diy or another self-hostable scheduler first (ADR-006 amendment, #9)
+- Deploy Cal.diy and confirm on a live instance: Resend SMTP on port 587, the iframe embed (needs the `X-Frame-Options` Transform Rule for the Cal host), and that no third-party requests fire. Then set `BOOKING_URL` (#9)
 - Local development: the README quick start runs `docker compose up -d db`, but `db` publishes no port, so `localhost:5432` cannot reach it. Needs a dev-only compose override or another local Postgres
 - Playwright in CI
 - Link Nexus from the site once the owner has tidied the repo and made it public. Until then it is described without a link.
@@ -125,7 +127,7 @@ Every piece of public copy (pages, meta descriptions, form messages, emails to v
 - [ADR-003: Self-host by default, with Resend as the only hosted service](docs/ADRs/ADR-003-self-host-by-default.md) — the owner owns the tooling; email is the one exception
 - [ADR-004: Docker deployment via Komodo, exposed only through a Cloudflare Tunnel](docs/ADRs/ADR-004-docker-komodo-cloudflare-tunnel.md) — no host ports, secrets as Komodo variables
 - [ADR-005: Plausible as the only analytics](docs/ADRs/ADR-005-plausible-analytics.md) — env-configured script, no other trackers
-- [ADR-006: Self-hosted Cal.com for booking](docs/ADRs/ADR-006-self-hosted-calcom-booking.md) — on hold: Cal.com closed its source in April 2026; re-evaluate Cal.diy or alternatives before adding to compose
+- [ADR-006: Self-hosted Cal.com for booking](docs/ADRs/ADR-006-self-hosted-calcom-booking.md) — accepted with Cal.diy after Cal.com closed its source in April 2026; own database on the shared Postgres, own tunnel hostname
 - [ADR-007: Vitest, ESLint, Prettier and Playwright as the test and lint toolchain](docs/ADRs/ADR-007-test-and-lint-toolchain.md) — CI runs lint, typecheck, test and build
 - [ADR-008: Build the client portal inside this repo, behind a clean boundary](docs/ADRs/ADR-008-client-portal-in-monorepo.md) — route-group separation now, extract on defined triggers
 

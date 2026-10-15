@@ -14,10 +14,24 @@ Notes for deploying the site. The deployable artefacts themselves (`Dockerfile`,
 1. In the Cloudflare Zero Trust dashboard, create a remote-managed tunnel and copy its token (Networks, Tunnels). The token is the long string starting `eyJ` in the install command, not the tunnel ID (a UUID).
 2. Under the tunnel's Routes, add published applications for `wingate.associates` and `www.wingate.associates`, both with service `http://web:3000`. The `web` name resolves because `cloudflared` shares the `edge` network with it. Without a route the connector shows healthy but the site does not load. The runbook's `www`-to-apex redirect is a separate Cloudflare Redirect Rule.
 3. Paste `.env.example` into the Komodo stack's Environment and fill in the blanks. Each line is `NAME=value`; check the name is not pasted twice (`NAME=NAME=value`).
-4. In the Komodo stack settings, add `migrate` to Ignore Services. It runs once and exits, and Komodo otherwise reports the stack as unhealthy.
+4. In the Komodo stack settings, add `migrate` and `cal-db-init` to Ignore Services. Each runs once and exits, and Komodo otherwise reports the stack as unhealthy.
 5. `NEXT_PUBLIC_PLAUSIBLE_SRC` is inlined at build time, so it must be available when the stack builds the image (compose passes it as a build arg). Changing it needs a rebuild, not just a restart.
 6. Email lives in Resend for both directions. The domain is verified for sending (DKIM `resend._domainkey`, plus `send` and `rsend` CNAMEs) and for receiving (root MX `inbound-smtp.us-east-1.amazonaws.com`, priority 5), and `hello@wingate.associates` is a Resend inbox. `_dmarc` is `v=DMARC1; p=none; rua=mailto:hello@wingate.associates`. Cloudflare Email Routing must stay off: it adds its own locked MX records, and a domain can deliver to only one provider.
 7. Deploy the stack. Nothing needs creating on the host first: `compose.yaml` defines the networks and the volume.
+
+### Booking (Cal.diy)
+
+Self-hosted scheduler from ADR-006, shown beside the contact form. It needs the `CAL_*` variables from `.env.example`; a blank one stops the whole deploy on purpose.
+
+1. Add a published application to the tunnel: `cal.wingate.associates` (the value of `CAL_HOST`) with service `http://cal:3000`.
+2. Let Cal.diy be framed by the site. The Cloudflare edge adds `X-Frame-Options` to the zone, and the contact page embeds `https://cal.wingate.associates` in an iframe. Add a Transform Rule that removes `X-Frame-Options` for host `cal.wingate.associates` only. Cal.diy sets its own framing policy for booking pages. Leave the rule on the apex untouched.
+3. Deploy. `cal-db-init` creates the `cal` role and database on the existing Postgres, then `cal` applies its migrations on first start. That first start takes a few minutes.
+4. Open `https://cal.wingate.associates`. A setup wizard runs the first time: create the owner account there straight away, since nobody else is signed in. Public sign-up is off (`NEXT_PUBLIC_DISABLE_SIGNUP`).
+5. Create a 30-minute event type, connect a calendar, and copy the public booking URL (`https://cal.wingate.associates/<user>/<event>`).
+6. Set `BOOKING_URL` in Komodo to that URL and redeploy `web`. `/contact` then shows the embed. While it is empty the page shows a note that points to the form.
+7. Book a test slot. Check the confirmation email arrives (Cal.diy sends through Resend's SMTP relay with `RESEND_API_KEY`) and that the browser's network tab shows no requests to third parties.
+
+Updating: raise `CAL_VERSION`, read the release notes first, and redeploy. Cal.diy runs its own migrations on start. Back up the `cal` database before a major version bump.
 
 ## Things that bite
 
