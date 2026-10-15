@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+// Keep these in alphabetical order by label, whatever gets added later.
+// tests/site-chrome.test.tsx fails if they drift.
 const LINKS = [
-  { href: "/services", label: "Services" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
+  { href: "/services", label: "Services" },
 ];
 
 // Client component only so the current page's link can carry aria-current,
