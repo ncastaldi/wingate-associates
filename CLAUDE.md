@@ -99,6 +99,9 @@ Every piece of public copy (pages, meta descriptions, form messages, emails to v
 
 ### In progress
 
+- First case study (`/work/...`): the role cleanup (24 to 7) story, anonymised, in the owner's voice. Needs the owner's answers on the situation, how the problem was found, the steps, results beyond the number, and how much context to give. Next session's focus.
+- Services and About pages have a lot of empty right-hand space on wide screens. Parked; options were side panels, the design system's spare diagrams, or a narrower layout.
+
 ### Not started
 
 - Portfolio and case studies: deferred past v1.
@@ -128,4 +131,4 @@ Every piece of public copy (pages, meta descriptions, form messages, emails to v
 
 ---
 
-*Last updated: 2026-10-14 | Session: launch basics (robots, sitemap, favicon, sharing metadata) and first Komodo deploy*
+*Last updated: 2026-10-15 | Session: real copy, design system, visitor acknowledgement email, hello@ as a Resend inbox*
