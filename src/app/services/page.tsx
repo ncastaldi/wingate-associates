@@ -57,7 +57,9 @@ export default function ServicesPage() {
                 <data value="5.05">5.05</data>
                 <data value="4.65">4.65</data>
               </p>
-              <figcaption>At the same company I took MTTR from 5.05 days to 4.65.</figcaption>
+              <figcaption>
+                At the same company I took Mean Time To Resolve from 5.05 days to 4.65.
+              </figcaption>
             </figure>
           </li>
         </ul>
