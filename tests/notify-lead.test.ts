@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
+  ACKNOWLEDGEMENT_HTML,
+  ACKNOWLEDGEMENT_PARAGRAPHS,
   ACKNOWLEDGEMENT_TEXT,
-  sendLeadAcknowledgement,
-  sendLeadNotification,
-  type EmailSender,
-} from "@/lib/notify-lead";
+} from "@/lib/acknowledgement-email";
+import { sendLeadAcknowledgement, sendLeadNotification, type EmailSender } from "@/lib/notify-lead";
 
 const lead = { name: "Ada Lovelace", email: "ada@example.com", message: "Hello there" };
 
@@ -69,6 +69,7 @@ describe("sendLeadAcknowledgement", () => {
       replyTo: "owner@example.com",
       subject: "Got your message",
       text: ACKNOWLEDGEMENT_TEXT,
+      html: ACKNOWLEDGEMENT_HTML,
     });
   });
 
@@ -83,8 +84,23 @@ describe("sendLeadAcknowledgement", () => {
     expect(payload).not.toContain("spam body");
   });
 
-  it("keeps to the owner's voice: no em dashes", () => {
-    expect(ACKNOWLEDGEMENT_TEXT).not.toContain("\u2014");
+  it("keeps to the owner's voice: no em dashes and no question marks", () => {
+    for (const version of [ACKNOWLEDGEMENT_TEXT, ACKNOWLEDGEMENT_HTML]) {
+      expect(version).not.toContain("\u2014");
+    }
+    expect(ACKNOWLEDGEMENT_TEXT).not.toContain("?");
+  });
+
+  it("carries every paragraph in both the text and HTML versions", () => {
+    for (const paragraph of ACKNOWLEDGEMENT_PARAGRAPHS) {
+      expect(ACKNOWLEDGEMENT_TEXT).toContain(paragraph);
+      expect(ACKNOWLEDGEMENT_HTML).toContain(paragraph);
+    }
+  });
+
+  it("loads nothing from third parties: no tracking pixels, only the site's own logo", () => {
+    const sources = [...ACKNOWLEDGEMENT_HTML.matchAll(/src="([^"]+)"/g)].map((m) => m[1]);
+    expect(sources).toEqual(["https://wingate.associates/logo-mark.png"]);
   });
 
   it("throws when Resend reports an error", async () => {
