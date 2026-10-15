@@ -7,12 +7,13 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
 describe("SiteHeader", () => {
-  it("links the name to home and the main nav to Services and Contact", () => {
+  it("links the name to home and the main nav to Services, About and Contact", () => {
     render(<SiteHeader />);
     expect(screen.getByRole("link", { name: "Wingate Associates" })).toHaveAttribute("href", "/");
     const nav = screen.getByRole("navigation", { name: "Main" });
     expect(nav).toHaveTextContent("Services");
     expect(screen.getByRole("link", { name: "Services" })).toHaveAttribute("href", "/services");
+    expect(screen.getByRole("link", { name: "About" })).toHaveAttribute("href", "/about");
     expect(screen.getByRole("link", { name: "Contact" })).toHaveAttribute("href", "/contact");
   });
 });
